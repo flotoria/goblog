@@ -1,10 +1,14 @@
 import {TextField, Box, Button} from '@mui/material';
 import Image from 'next/image';
 import Link from 'next/link'
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { setUserDetails } from '@/hooks/userHooks';
+import { useRouter } from 'next/router';
 
 
 export default function Login() {
+
+    const router = useRouter();
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -18,12 +22,15 @@ export default function Login() {
             body: JSON.stringify({
                 email,
                 password
-            })
+            }),
+            credentials: 'include'
         });
 
         const data = await res.json();
-        console.log(data);
+        router.push('/dashboard');
     }
+
+
     return (
       <div className="w-full h-screen bg-slate-200 flex justify-center items-center">
         <div className="w-1/2 flex justify-center items-center">

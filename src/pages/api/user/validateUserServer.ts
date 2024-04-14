@@ -12,17 +12,15 @@ export default async function handler(
   res: NextApiResponse,
 ) {
   try {
-    if (req.method === "POST" || req.method === "GET") {
-      const token = req.cookies['token'];
+    if (req.method === "POST") {
+      const { token } = req.body;
       if (!token) {
         return res.status(400).json({ message: "Missing required fields." });
-     
       } else {  
         await jwt.verify(token, process.env.JWT_SECRET!, async (err: any, decoded: any) => {
           if (err) {
             console.error(err);
             return res.status(401).json({ message: "Invalid token." });
-   
           }
           console.log(decoded);
           const result = await sql`SELECT name, email, gender FROM users WHERE id = ${decoded?.user_id};`
@@ -34,6 +32,7 @@ export default async function handler(
       }
     } else {
       return res.status(405).json({ message: "Method not allowed." });
+ 
     }
   } catch (error) {
     return res.status(500).json({ message: "Internal server error." });

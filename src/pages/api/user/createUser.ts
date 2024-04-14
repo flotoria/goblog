@@ -3,8 +3,6 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { sql } from "@vercel/postgres";
 import bcrypt from "bcrypt";
 
-
-
 export default function handler(
   req: NextApiRequest,
   res: NextApiResponse,
@@ -25,6 +23,9 @@ export default function handler(
         }
       });
       res.status(200).json({ message: "Created account successfully." });
+    }
+    else {
+      res.status(405).json({ message: "Method not allowed." });
     }
   } catch (error) {
     res.status(500).json({ message: "Internal server error." });
