@@ -6,10 +6,13 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { useState } from 'react';
+import { useRouter } from 'next/router';
 
 
 
 export default function Register() {
+
+    const router = useRouter();
 
     const handleSubmit = async () => {
         
@@ -25,6 +28,8 @@ export default function Register() {
                 password
             })
         });
+
+        router.push('/login');
     }
 
     const [name, setName] = useState('');
@@ -33,13 +38,14 @@ export default function Register() {
     const [password, setPassword] = useState('');
 
     return (
-        <div className="w-full h-dvh bg-slate-200 flex justify-center items-center overflow-hidden">
-            <div className="w-1/2 flex justify-center items-center">
-                <Image src="/logo.png" className="w-1/4 h-1/4 rounded-full drop-shadow-lg" alt="Logo" width={600} height={600} />
-                <h1 className="text-[2vw] font-bold">GoBlog</h1>
+        <div className="w-full min-h-screen bg-slate-200 flex justify-center items-center">
+            <div className="w-1/2 md:flex hidden justify-center items-center">
+                <div className="w-128 h-128 flex justify-center items-center">
+                    <Image src="/logo.png" className="w-96 h-96 rounded-full drop-shadow-lg" alt="Logo" width={600} height={600} />
+                </div>
             </div>
-            <div className="w-1/2">
-                <div className="w-96 h-128 rounded-3xl bg-slate-100 drop-shadow-md overflow-hidden">
+            <div className="w-1/2 h-dvh flex items-center">
+                <div className="w-128 h-128 rounded-3xl bg-slate-100 drop-shadow-md overflow-hidden">
 
                     <Box sx={{
                         width: 1,
