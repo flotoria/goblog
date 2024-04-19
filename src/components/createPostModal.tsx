@@ -42,6 +42,7 @@ export default function CreatePostModal({ open, handleClose }: { open: boolean, 
             })
 
         })
+        handleClose();
     }
 
     useEffect(() => {

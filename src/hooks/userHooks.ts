@@ -12,7 +12,7 @@ export function setUserDetails() {
     const dispatch = useDispatch();
 
     
-    const fetchDataAndChangeState = async () => {
+    const fetchDataAndChangeState = async () => {   
         setLoading(true);
         const response = await fetch('/api/user/validateAndGetUser');
         if (response.status !== 200) {

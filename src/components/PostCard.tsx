@@ -1,4 +1,4 @@
-import { Card, CardHeader, CardMedia, CardContent, Avatar, IconButton, Typography } from '@mui/material';
+import { Card, CardHeader, CardMedia, CardContent, Avatar, IconButton, Typography, MenuItem, Paper, MenuList } from '@mui/material';
 import { useState, useEffect } from 'react';
 import PostModal from './PostModal';
 
@@ -14,10 +14,17 @@ export default function PostCard({title, content, user_id, timestamp}: PostCardP
 
     const [name, setName] = useState('');
     const [postModal, openPostModal] = useState(false);
+
+    const getFirstImage = (htmlString: string) => {
+      const parser = new DOMParser();
+      const htmlDoc = parser.parseFromString(htmlString, 'text/html');
+      const img = htmlDoc.querySelector('img');
+      return img ? img.src : 'https://cdn.pixabay.com/photo/2015/11/03/08/56/question-mark-1019820_960_720.jpg';
+    }
     
 
       const getUserData = async () => {
-        const data = await fetch('api/user/getUserInfo', 
+        const data = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/user/getUserInfo`, 
           {
             method: 'POST',
             headers: {
@@ -40,13 +47,18 @@ export default function PostCard({title, content, user_id, timestamp}: PostCardP
       )
       return (
         <>
+        
           <PostModal title={title} content={content} open={postModal} handleClose={() => openPostModal(false)} timestamp={timestamp} author={name} />
-          <Card onClick={() => openPostModal(true)} sx={{ maxWidth: 345 }}>
+          <Card onClick={() => openPostModal(true)} sx={{ width: "100%" }}>
           <CardHeader
             avatar={
-              <Avatar sx={{ bgcolor: 'red' }} aria-label="recipe">
-                R
-              </Avatar>
+              <div>
+                <Avatar sx={{ bgcolor: 'lightblue' }} aria-label="recipe">
+                  {name.charAt(0)}
+                  
+                </Avatar>
+                
+            </div>
             }
           
             title={name}
@@ -55,11 +67,12 @@ export default function PostCard({title, content, user_id, timestamp}: PostCardP
           <CardMedia
             component="img"
             height="194"
-            image="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRKHwlKQQzFpEMHeKdDNBPZNWTOGHIh3m06ElsCfYn04w&s"
+            image={getFirstImage(content)}
             alt=""
+            sx={{ objectFit: 'cover' }}
           />
           <CardContent>
-            <Typography variant="body2" color="text.secondary">
+            <Typography variant="body1" color="text.primary">
               {title}
             </Typography>
           </CardContent>

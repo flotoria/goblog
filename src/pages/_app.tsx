@@ -9,7 +9,6 @@ export default function App({ Component, pageProps }: AppProps) {
   return(
     <Provider store={store}>
       <CssBaseline />
-      <Header />
       <Component {...pageProps} />
    </Provider>
   )

@@ -30,7 +30,34 @@ export default function Login() {
         router.push('/dashboard');
     }
 
+    const tryToLoginUser = async () => {
+      try {
+          const res = await fetch('/api/user/validateAndGetUser', {
+              method: 'GET',
+              headers: {
+                  'Content-Type': 'application/json'
+              },
+              credentials: 'include'
+          });
 
+          if (res.ok) {
+            const data = await res.json();
+            router.push("/dashboard");
+          } else {
+            throw new Error('HTTP error');
+          }
+      }
+      catch {
+          router.push("/login");
+      }
+    
+    }
+
+    useEffect(() => {
+      tryToLoginUser();
+    }, []);
+
+ 
     return (
       <div className="w-full h-screen bg-slate-200 flex justify-center items-center">
         <div className="w-1/2 flex justify-center items-center">
