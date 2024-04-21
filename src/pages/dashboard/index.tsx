@@ -9,10 +9,15 @@ import PostModal from "@/components/PostModal";
 import DashboardLayout from "@/components/DashboardLayout";
 import PostGrid from "@/components/PostGrid";
 
+import { Select, MenuItem, FormControl, InputLabel } from "@mui/material";
+import { SelectChangeEvent } from '@mui/material';
+
 export default function Dashboard() {
     const { userId, name, email, gender } = getUserDetails();
     const [posts, setPosts] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
+
+    const [selectedCategory, setSelectedCategory] = useState('');
 
     const getPosts = async () => {
         setLoading(true);
@@ -28,12 +33,41 @@ export default function Dashboard() {
         setLoading(false);
     
     }
+
+    const categories = ['Tech', 'Design', 'Business', 'Health', 'Game']; // Example categories
+
+    const handleCategoryChange = (event: SelectChangeEvent) => {
+        setSelectedCategory(event.target.value as string);
+    };
+
+    const filteredPosts = posts.filter(post => selectedCategory === '' || post.category === selectedCategory);
+    
     useEffect(() => {
         getPosts();
     }, []);
     
     return (
         <DashboardLayout>
+          <Box sx={{ width: '10%', marginBottom: 2 }}>
+            <FormControl fullWidth>
+                <InputLabel id="category-select-label">Category</InputLabel>
+                <Select
+                    labelId="category-select-label"
+                    id="category-select"
+                    value={selectedCategory}
+                    label="Category"
+                    onChange={handleCategoryChange}
+                >
+                    <MenuItem value="">
+                        <em>All</em>
+                    </MenuItem>
+                    {categories.map((category, index) => (
+                        <MenuItem key={index} value={category}>{category}</MenuItem>
+                    ))}
+                </Select>
+            </FormControl>
+          </Box>
+          
           { !loading ? 
           (
             <PostGrid posts={posts} />
