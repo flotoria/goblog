@@ -43,6 +43,7 @@ export default function CreatePostModal({ open, handleClose }: { open: boolean, 
 
         })
         handleClose();
+        window.location.reload();
     }
 
     useEffect(() => {
@@ -58,6 +59,7 @@ export default function CreatePostModal({ open, handleClose }: { open: boolean, 
         <Modal
             open={open}
             onClose={handleClose}
+            sx={{zIndex: 9999999}}
         >
             <div className="h-screen w-full flex justify-center items-center">
                 <Box sx={{width: 3/5, 

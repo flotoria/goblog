@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import PostModal from './PostModal';
 
 interface PostCardProps {
+    id: number;
     title: string;
     content: string;
     user_id: number;
@@ -10,7 +11,7 @@ interface PostCardProps {
 }
 
 
-export default function PostCard({title, content, user_id, timestamp}: PostCardProps) {
+export default function PostCard({id, title, content, user_id, timestamp}: PostCardProps) {
 
     const [name, setName] = useState('');
     const [postModal, openPostModal] = useState(false);
@@ -48,7 +49,7 @@ export default function PostCard({title, content, user_id, timestamp}: PostCardP
       return (
         <>
         
-          <PostModal title={title} content={content} open={postModal} handleClose={() => openPostModal(false)} timestamp={timestamp} author={name} />
+          <PostModal id={id} title={title} content={content} open={postModal} handleClose={() => openPostModal(false)} timestamp={timestamp} author={name} />
           <Card onClick={() => openPostModal(true)} sx={{ width: "100%" }}>
           <CardHeader
             avatar={

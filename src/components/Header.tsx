@@ -32,7 +32,7 @@ export default function Header() {
     }, [loading]);
 
     return (
-        <header className="bg-slate-100 text-white w-full flex flex-row h-12 drop-shadow-md">
+        <header className="bg-slate-100 text-white w-full flex flex-row h-12 drop-shadow-md sticky z-[9999]">
             <div className="w-1/2" onClick={() => router.push("/dashboard")}>
                 <Image src="/logo.png" className="w-12 h-12" alt="Logo" width={600} height={600} />
             </div>
@@ -46,7 +46,7 @@ export default function Header() {
                             <Paper>
                                 <MenuList>
                                     <MenuItem onClick={() => { setDrawerOpen(!drawerOpen); router.push(`/dashboard/user/${id.toString()}`) }}>Profile</MenuItem>
-                                    <MenuItem>My account</MenuItem>
+                                    <MenuItem onClick={() => router.push("/dashboard/user_settings")}>My account</MenuItem>
                                     <MenuItem onClick={() => handleLogout()}>Logout</MenuItem>
                                 </MenuList>
                             </Paper>

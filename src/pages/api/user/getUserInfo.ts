@@ -12,13 +12,16 @@ export default async function handler(
   res: NextApiResponse,
 ) {
   try {
-    if (req.method === "POST" || req.method === "GET") {
+    if (req.method === "POST") {
           const { user_id } = req.body;
           const result = await sql`SELECT name, email, gender FROM users WHERE id = ${user_id};`
           const name = result.rows[0].name;
           const email = result.rows[0].email;
           const gender = result.rows[0].gender;
           return res.status(200).json({ name, email, gender });   
+    }
+    else {
+      return res.status(405).json({ message: "Method not allowed." });
     }
   } catch (error) {
     return res.status(500).json({ message: "Internal server error." });
