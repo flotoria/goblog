@@ -34,7 +34,7 @@ export default function Dashboard() {
     
     }
 
-    const categories = ['Tech', 'Design', 'Business', 'Health', 'Game']; // Example categories
+    const categories = ['Tech', 'Design', 'Business', 'Health', 'Game'];
 
     const handleCategoryChange = (event: SelectChangeEvent) => {
         setSelectedCategory(event.target.value as string);
@@ -47,35 +47,35 @@ export default function Dashboard() {
     }, []);
     
     return (
-        <DashboardLayout>
-          <Box sx={{ width: '10%', marginBottom: 2 }}>
-            <FormControl fullWidth>
-                <InputLabel id="category-select-label">Category</InputLabel>
-                <Select
-                    labelId="category-select-label"
-                    id="category-select"
-                    value={selectedCategory}
-                    label="Category"
-                    onChange={handleCategoryChange}
-                >
-                    <MenuItem value="">
-                        <em>All</em>
-                    </MenuItem>
-                    {categories.map((category, index) => (
-                        <MenuItem key={index} value={category}>{category}</MenuItem>
-                    ))}
-                </Select>
-            </FormControl>
-          </Box>
-          
-          { !loading ? 
-          (
-            <PostGrid posts={posts} />
-          ) : (
-          <div className="w-full h-screen flex justify-center items-center">
-            <CircularProgress />
-          </div>
-          )}
-        </DashboardLayout>
-    );
+      <DashboardLayout>
+        <Box sx={{ width: '10%', marginBottom: 2 }}>
+          <FormControl fullWidth>
+              <InputLabel id="category-select-label">Category</InputLabel>
+              <Select
+                  labelId="category-select-label"
+                  id="category-select"
+                  value={selectedCategory}
+                  label="Category"
+                  onChange={handleCategoryChange}
+              >
+                  <MenuItem value="">
+                      <em>All</em>
+                  </MenuItem>
+                  {categories.map((category, index) => (
+                      <MenuItem key={index} value={category}>{category}</MenuItem>
+                  ))}
+              </Select>
+          </FormControl>
+        </Box>
+        
+        { !loading ? 
+        (
+          <PostGrid posts={filteredPosts} />
+        ) : (
+        <div className="w-full h-screen flex justify-center items-center">
+          <CircularProgress />
+        </div>
+        )}
+      </DashboardLayout>
+  );
 }
