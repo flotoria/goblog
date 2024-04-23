@@ -12,6 +12,11 @@ import Avatar from '@mui/material/Avatar';
 export default function CommentComponent({commenter_id, content, timestamp}: {commenter_id: number, content: string, timestamp: string}) {
     const [name, setName] = useState('');
     const getUserData = async () => {
+          const cachedName = sessionStorage.getItem(commenter_id.toString());
+          if (cachedName) {
+            setName(cachedName);
+            return;
+          }
 
         const data = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/user/getUserInfo`, 
           {
@@ -24,6 +29,8 @@ export default function CommentComponent({commenter_id, content, timestamp}: {co
         )
         
         const userData = await data.json();
+
+        sessionStorage.setItem(commenter_id.toString(), userData.name);
 
         setName(userData.name);
 

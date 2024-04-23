@@ -15,8 +15,8 @@ export default function CreatePostModal({ open, handleClose }: { open: boolean, 
     const [title, setTitle] = useState('');
     const [loadEditor, setLoadEditor] = useState(false);
     const [selectedCategory, setSelectedCategory] = useState('All');
-    const categories = { 'All': 0, 'Tech': 1, 'Design': 2, 'Business': 3, 'Health': 4, 'Games': 5 };
-
+    const categories:{ [key: string]: number } = { 'All': 0, 'Tech': 1, 'Design': 2, 'Business': 3, 'Health': 4, 'Games': 5 };
+    
     const handleChange = (html: any) => {
         setEditorHtml(html);
     };
@@ -62,6 +62,7 @@ export default function CreatePostModal({ open, handleClose }: { open: boolean, 
         <Modal
             open={open}
             onClose={handleClose}  
+            sx={{ zIndex: 9999 }}
         >
             <div className="h-screen w-full flex justify-center items-center">
                 <Box sx={{

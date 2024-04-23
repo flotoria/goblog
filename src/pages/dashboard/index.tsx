@@ -8,6 +8,8 @@ import PostCard from "@/components/PostCard";
 import PostModal from "@/components/PostModal";
 import DashboardLayout from "@/components/DashboardLayout";
 import PostGrid from "@/components/PostGrid";
+import Cookies from 'js-cookie';
+import {useRouter} from 'next/router';
 
 import { Select, MenuItem, FormControl, InputLabel } from "@mui/material";
 import { SelectChangeEvent } from '@mui/material';
@@ -17,6 +19,7 @@ export default function Dashboard() {
     const [posts, setPosts] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [filteredPosts, setFilteredPosts] = useState<any[]>([]);
+    const router = useRouter();
 
     const [selectedCategory, setSelectedCategory] = useState('All');
 
@@ -42,6 +45,7 @@ export default function Dashboard() {
     };
 
     useEffect(() => {
+        sessionStorage.clear();
         getPosts();
     }, []);
 

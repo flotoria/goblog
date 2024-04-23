@@ -36,6 +36,7 @@ export default function UserPage() {
 
     }
     useEffect(() => { 
+        sessionStorage.clear();
         if (router.query.user_id) {
             getPosts();
         }

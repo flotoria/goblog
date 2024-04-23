@@ -25,6 +25,11 @@ export default function PostCard({id, title, content, user_id, timestamp}: PostC
     
 
       const getUserData = async () => {
+        const cachedName = sessionStorage.getItem(user_id.toString());
+        if (cachedName) {
+          setName(cachedName);
+          return;
+        }
         const data = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/user/getUserInfo`, 
           {
             method: 'POST',
@@ -36,6 +41,8 @@ export default function PostCard({id, title, content, user_id, timestamp}: PostC
         )
         
         const userData = await data.json();
+
+        sessionStorage.setItem(user_id.toString(), userData.name);
 
         setName(userData.name);
 

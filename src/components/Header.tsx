@@ -40,7 +40,7 @@ export default function Header() {
                 <CreatePostModal open={postModal} handleClose={() => openPostModal(false)} />
                 <Button sx={{ height: 0.75, whiteSpace: "nowrap" }} variant="contained" onClick={() => openPostModal(true)} >Create Post</Button>
                 <div>
-                    <Avatar onClick={() => { setDrawerOpen(!drawerOpen) }} sx={{ bgcolor: 'lightblue' }} className="ml-3">{name.charAt(0)}</Avatar>
+                    <Avatar onClick={() => { setDrawerOpen(!drawerOpen) }} sx={{ bgcolor: 'lightblue' }} className="ml-3">{name && name.charAt(0)}</Avatar>
                     {drawerOpen && (
                         <div className="absolute right-0">
                             <Paper>
