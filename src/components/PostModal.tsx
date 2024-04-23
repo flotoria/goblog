@@ -70,7 +70,9 @@ export default function PostModal({ open, handleClose, id, title, content, times
                         </Typography>
                         <Box sx={{
                             overflow: "auto",
-                            gap: 0.5
+                            display: "flex",
+                            flexDirection: "column",
+                            gap: 2
                         }}>
                            
                             {

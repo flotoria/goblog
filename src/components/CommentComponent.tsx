@@ -34,7 +34,7 @@ export default function CommentComponent({commenter_id, content, timestamp}: {co
         getUserData();
       })
   return (
-    <Card sx={{ minWidth: 275, backgroundColor: "rgb(248 250 252)" }}>
+    <Card sx={{ minWidth: 275, minHeight: 130, backgroundColor: "rgb(248 250 252)" }}>
          <CardContent>
         <Typography variant="body2">
             {content}

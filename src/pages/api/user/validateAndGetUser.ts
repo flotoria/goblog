@@ -24,7 +24,6 @@ export default async function handler(
             return res.status(401).json({ message: "Invalid token." });
    
           }
-          console.log(decoded);
           const result = await sql`SELECT name, email, gender FROM users WHERE id = ${decoded?.user_id};`
           const name = result.rows[0].name;
           const email = result.rows[0].email;

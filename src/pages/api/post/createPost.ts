@@ -10,7 +10,8 @@ export default async function handler(
   try {
     if (req.method === "POST") {
       const cookies = cookie.parse(req.headers.cookie || '');
-      const { title, contents } = req.body;
+      const { title, contents, category } = req.body;
+      const selectedCategoryID = category || null;
       if (!title || !contents) {
         return res.status(400).json({ message: "Missing required fields." });
       }
@@ -25,7 +26,7 @@ export default async function handler(
         return res.status(401).json({ message: "Invalid token." });
       }
       const data = await response.json();
-      await sql`INSERT INTO posts (title, contents, user_id) VALUES (${title}, ${contents}, ${data.user_id});`
+      await sql`INSERT INTO posts (title, contents, user_id, category_id) VALUES (${title}, ${contents}, ${data.user_id}, ${selectedCategoryID});`
       return res.status(200).json("Post created successfully.");
       
     }

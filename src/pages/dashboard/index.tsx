@@ -1,6 +1,6 @@
 import CreatePostModal from "@/components/CreatePostModal";
 import { setUserDetails, getUserDetails } from "@/hooks/userHooks";
-import { Box, Grid, CircularProgress } from "@mui/material";
+import { Box, Grid, CircularProgress, Chip } from "@mui/material";
 import QuillEditor from "react-quill";
 import { useEffect, useState } from "react";
 import Header from "@/components/Header";
@@ -16,8 +16,9 @@ export default function Dashboard() {
     const { userId, name, email, gender } = getUserDetails();
     const [posts, setPosts] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
+    const [filteredPosts, setFilteredPosts] = useState<any[]>([]);
 
-    const [selectedCategory, setSelectedCategory] = useState('');
+    const [selectedCategory, setSelectedCategory] = useState('All');
 
     const getPosts = async () => {
         setLoading(true);
@@ -31,51 +32,38 @@ export default function Dashboard() {
         const data = await res.json();
         setPosts(data);
         setLoading(false);
-    
+
     }
 
-    const categories = ['Tech', 'Design', 'Business', 'Health', 'Game'];
+    const categories = {'All': 0, 'Tech': 1, 'Design': 2, 'Business': 3, 'Health': 4, 'Games': 5};
 
-    const handleCategoryChange = (event: SelectChangeEvent) => {
-        setSelectedCategory(event.target.value as string);
+    const handleCategoryChange = (category: string) => {
+        setSelectedCategory(category);
     };
 
-    const filteredPosts = posts.filter(post => selectedCategory === '' || post.category === selectedCategory);
-    
     useEffect(() => {
         getPosts();
     }, []);
-    
+
+    useEffect(() => {
+        setFilteredPosts(posts.filter(post => selectedCategory === 'All' || post.category_id === categories[selectedCategory]));
+    }, [posts, selectedCategory])
     return (
-      <DashboardLayout>
-        <Box sx={{ width: '10%', marginBottom: 2 }}>
-          <FormControl fullWidth>
-              <InputLabel id="category-select-label">Category</InputLabel>
-              <Select
-                  labelId="category-select-label"
-                  id="category-select"
-                  value={selectedCategory}
-                  label="Category"
-                  onChange={handleCategoryChange}
-              >
-                  <MenuItem value="">
-                      <em>All</em>
-                  </MenuItem>
-                  {categories.map((category, index) => (
-                      <MenuItem key={index} value={category}>{category}</MenuItem>
-                  ))}
-              </Select>
-          </FormControl>
-        </Box>
-        
-        { !loading ? 
-        (
-          <PostGrid posts={filteredPosts} />
-        ) : (
-        <div className="w-full h-screen flex justify-center items-center">
-          <CircularProgress />
-        </div>
-        )}
-      </DashboardLayout>
-  );
+        <DashboardLayout>
+            <Box sx={{ display: "flex", gap: 1 }}>
+                {Object.keys(categories).map((category, index) => (
+                    <Chip key={index} label={category} onClick={() => handleCategoryChange(category)} variant={selectedCategory === category ? 'filled' : 'outlined'} />
+                ))}
+            </Box>
+
+            {!loading ?
+                (
+                    <PostGrid posts={filteredPosts} />
+                ) : (
+                    <div className="w-full h-screen flex justify-center items-center">
+                        <CircularProgress />
+                    </div>
+                )}
+        </DashboardLayout>
+    );
 }
