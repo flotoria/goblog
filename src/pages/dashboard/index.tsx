@@ -38,7 +38,7 @@ export default function Dashboard() {
 
     }
 
-    const categories = {'All': 0, 'Tech': 1, 'Design': 2, 'Business': 3, 'Health': 4, 'Games': 5};
+    const categories: {[key: string]: number} = {'All': 0, 'Tech': 1, 'Design': 2, 'Business': 3, 'Health': 4, 'Games': 5};
 
     const handleCategoryChange = (category: string) => {
         setSelectedCategory(category);

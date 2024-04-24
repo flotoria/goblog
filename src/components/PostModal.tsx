@@ -22,7 +22,7 @@ export default function PostModal({ open, handleClose, id, title, content, times
                     content: comment
                 })
             });
-        await getComments();    
+        await getComments();
     }
 
     const getComments = async () => {
@@ -74,7 +74,7 @@ export default function PostModal({ open, handleClose, id, title, content, times
                             flexDirection: "column",
                             gap: 2
                         }}>
-                           
+
                             {
                                 listOfComments.map((comment, index) => {
                                     return (
@@ -86,7 +86,8 @@ export default function PostModal({ open, handleClose, id, title, content, times
                         <Box
                             sx={{
                                 display: "flex",
-                                flexDirection: "row"
+                                flexDirection: "row",
+                                gap: 2
                             }}>
                             <TextField value={comment} onChange={(e) => setComment(e.target.value)} fullWidth label="Comment" />
                             <Button variant="contained" onClick={handleComment}>

@@ -5,7 +5,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   return(
     <>
       <Header/>
-      <div className="p-3">
+      <div className="p-3 bg-slate-100 min-h-dvh">
         { children }
       </div>
     </>

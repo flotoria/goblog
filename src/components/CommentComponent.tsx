@@ -41,21 +41,22 @@ export default function CommentComponent({commenter_id, content, timestamp}: {co
         getUserData();
       })
   return (
-    <Card sx={{ minWidth: 275, minHeight: 130, backgroundColor: "rgb(248 250 252)" }}>
-         <CardContent>
-        <Typography variant="body2">
-            {content}
-        </Typography>
-      </CardContent>
+    <Card sx={{ minWidth: 275, minHeight: 125, backgroundColor: "rgb(248 250 252)" }} elevation={4}>
         <CardHeader
         avatar={
           <Avatar sx={{ bgcolor: "lightblue" }} aria-label="recipe">
-            R
+            {name && name.charAt(0)}
           </Avatar>
         }
         title={name}
         subheader={timestamp}
       />
+         <CardContent>
+        <Typography variant="body2">
+            {content}
+        </Typography>
+      </CardContent>
+      
      
       <CardActions>
       </CardActions>
