@@ -26,18 +26,27 @@ export default function Dashboard() {
 
     const getPosts = async () => {
         setLoading(true);
-        const res = await fetch('/api/post/getAllPosts', {
+        try {
+          const res = await fetch('/api/post/getAllPosts', {
             method: 'GET',
             headers: {
-                'Content-Type': 'application/json'
+              'Content-Type': 'application/json'
             }
-        });
-
-        const data = await res.json();
-        setPosts(data);
+          });
+          const data = await res.json();
+          // Ensure that 'data' is an array before setting it to state
+          if (Array.isArray(data)) {
+            setPosts(data);
+          } else {
+            console.error('Data fetched is not an array:', data);
+            setPosts([]); // Set to an empty array if data is not an array
+          }
+        } catch (error) {
+          console.error("Error fetching posts:", error);
+          setPosts([]); // In case of an error, set to an empty array
+        }
         setLoading(false);
-
-    }
+    };
 
     const categories: {[key: string]: number} = {'All': 0, 'Tech': 1, 'Design': 2, 'Business': 3, 'Health': 4, 'Games': 5};
 
@@ -50,9 +59,18 @@ export default function Dashboard() {
         getPosts();
     }, []);
 
+    // useEffect(() => {
+    //     setFilteredPosts(posts.filter(post => selectedCategory === 'All' || post.category_id === categories[selectedCategory]));
+    // }, [posts, selectedCategory])
     useEffect(() => {
-        setFilteredPosts(posts.filter(post => selectedCategory === 'All' || post.category_id === categories[selectedCategory]));
-    }, [posts, selectedCategory])
+        if (Array.isArray(posts)) {
+          const filtered = posts.filter(post => 
+            selectedCategory === 'All' || post.category_id === categories[selectedCategory]
+          );
+          console.log("Filtered posts:", filtered); // Log to see the filtered data
+          setFilteredPosts(filtered);
+        }
+    }, [posts, selectedCategory]);
     // useEffect(() => {
     //     const result = [];
     //     for (let i = 0; i < posts.length; i++) {
