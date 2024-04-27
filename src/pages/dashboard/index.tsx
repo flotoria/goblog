@@ -21,7 +21,8 @@ export default function Dashboard() {
     const [filteredPosts, setFilteredPosts] = useState<any[]>([]);
     const router = useRouter();
 
-    const [selectedCategory, setSelectedCategory] = useState('All');
+    type CategoryKey = 'All' | 'Tech' | 'Design' | 'Business' | 'Health' | 'Games';
+    const [selectedCategory, setSelectedCategory] = useState<CategoryKey>('All');
 
     const getPosts = async () => {
         setLoading(true);
@@ -40,7 +41,7 @@ export default function Dashboard() {
 
     const categories: {[key: string]: number} = {'All': 0, 'Tech': 1, 'Design': 2, 'Business': 3, 'Health': 4, 'Games': 5};
 
-    const handleCategoryChange = (category: string) => {
+    const handleCategoryChange = (category: CategoryKey) => {
         setSelectedCategory(category);
     };
 
@@ -52,11 +53,25 @@ export default function Dashboard() {
     useEffect(() => {
         setFilteredPosts(posts.filter(post => selectedCategory === 'All' || post.category_id === categories[selectedCategory]));
     }, [posts, selectedCategory])
+    // useEffect(() => {
+    //     const result = [];
+    //     for (let i = 0; i < posts.length; i++) {
+    //         if (selectedCategory === 'All' || posts[i].category_id === categories[selectedCategory]) {
+    //             result.push(posts[i]);
+    //         }
+    //     }
+    //     setFilteredPosts(result);
+    // }, [posts, selectedCategory]);    
     return (
         <DashboardLayout>
             <Box sx={{ display: "flex", gap: 1 }}>
-                {Object.keys(categories).map((category, index) => (
-                    <Chip key={index} label={category} onClick={() => handleCategoryChange(category)} variant={selectedCategory === category ? 'filled' : 'outlined'} />
+                {Object.keys(categories).map((category) => (
+                    <Chip
+                        key={category}
+                        label={category}
+                        onClick={() => handleCategoryChange(category as CategoryKey)}
+                        variant={selectedCategory === category ? 'filled' : 'outlined'}
+                    />
                 ))}
             </Box>
 
