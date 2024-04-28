@@ -23,8 +23,9 @@ export default function Register() {
             },
             body: JSON.stringify({
                 name,
-                email,
                 gender,
+                email,
+                phone_number: phoneNumber,
                 password
             })
         });
@@ -33,8 +34,9 @@ export default function Register() {
     }
 
     const [name, setName] = useState('');
-    const [email, setEmail] = useState('');
     const [gender, setGender] = useState('');
+    const [email, setEmail] = useState('');
+    const [phoneNumber, setPhoneNumber] = useState('');
     const [password, setPassword] = useState('');
 
     return (
@@ -79,10 +81,16 @@ export default function Register() {
                             </Select>
                         </FormControl>
 
+                        <TextField sx={{
+                            width: 0.7,
+                        }}
+                            label="Phone Number"
+                            variant="outlined"
+                            value={phoneNumber}
+                            onChange={(e) => setPhoneNumber(e.target.value)} />
 
                         <TextField sx={{
                             width: 0.7,
-
                         }}
                             id="outlined-basic"
                             label="Email"

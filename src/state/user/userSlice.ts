@@ -1,17 +1,19 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface UserState { 
-    name: string;
-    email: string;
-    gender: string;
     id: number;
+    name: string;
+    gender: string;
+    email: string;
+    phone_number: string;
 }
 
 const initialState: UserState = { 
     id: 0,
     name: "",
+    gender: "",
     email: "",
-    gender: ""
+    phone_number: ""
 };
 
 const userSlice = createSlice({
@@ -24,14 +26,17 @@ const userSlice = createSlice({
         changeName: (state, action: PayloadAction<string>) => {
             state.name = action.payload;
         },
+        changeGender: (state, action: PayloadAction<string>) => {
+            state.gender = action.payload;
+        },
         changeEmail: (state, action: PayloadAction<string>) => {
             state.email = action.payload;
         },
-        changeGender: (state, action: PayloadAction<string>) => {
-            state.gender = action.payload;
+        changePhoneNumber: (state, action: PayloadAction<string>) => {
+            state.phone_number = action.payload;
         }
     }
 });
 
-export const { changeUserId, changeName, changeEmail, changeGender } = userSlice.actions;
+export const { changeUserId, changeName, changeGender, changeEmail, changePhoneNumber} = userSlice.actions;
 export default userSlice.reducer;

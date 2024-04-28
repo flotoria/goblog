@@ -36,8 +36,9 @@ export function setUserDetails() {
 export function getUserDetails() {
     const userId = useSelector((state: RootState) => state.user.id);
     const name = useSelector((state: RootState) => state.user.name);
-    const email = useSelector((state: RootState) => state.user.email);
     const gender = useSelector((state: RootState) => state.user.gender);
+    const email = useSelector((state: RootState) => state.user.email);
+    const phone_number = useSelector((state: RootState) => state.user.phone_number);
 
-    return { userId, name, email, gender };
+    return { userId, name, gender, email, phone_number };
 }
