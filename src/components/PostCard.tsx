@@ -1,5 +1,6 @@
-import { Box, Chip, Card, CardHeader, CardMedia, CardContent, Avatar, IconButton, Typography, MenuItem, Paper, MenuList } from '@mui/material';
-import { useState, useEffect } from 'react';
+import { Box, Chip, Card, CardHeader, CardMedia, CardContent, Avatar, Typography, IconButton } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
+import { useState, useEffect, MouseEvent } from 'react';
 import PostModal from './PostModal';
 
 interface PostCardProps {
@@ -21,11 +22,9 @@ function convertToReadableDate(timestamp: string) {
   return formattedDate;
 }
 
-
 export default function PostCard({ id, title, content, user_id, timestamp, category_id }: PostCardProps) {
-
   const [name, setName] = useState('');
-  const [postModal, openPostModal] = useState(false);
+  const [postModal, setPostModal] = useState(false);
   const categories: {[key: number]: string} = {0: 'All', 1: 'Tech', 2: 'Design', 3: 'Business', 4: 'Health', 5: 'Games'};
 
   const getFirstImage = (htmlString: string) => {
@@ -56,29 +55,54 @@ export default function PostCard({ id, title, content, user_id, timestamp, categ
     sessionStorage.setItem(user_id.toString(), userData.name);
 
     setName(userData.name);
-
-
   }
-  useEffect(
-    () => {
-      getUserData();
-    }, []
-  )
+
+  useEffect(() => {
+    getUserData();
+  }, [user_id]);
+
+  const handleDelete = async (postId: number, e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();  // Prevents the card click event
+    if (!confirm('Are you sure you want to delete this post?')) return;
+  
+    try {
+      const response = await fetch(`/api/post/deletePost?postId=${postId}`, {
+        method: 'DELETE',
+        credentials: 'include',
+      });
+      const data = await response.json();
+      if (response.ok) {
+        alert('Post deleted successfully');
+      } else {
+        alert(data.message);  // Server-side error message
+      }
+    } catch (error) {
+      console.error('Failed to delete the post:', error);
+      alert('Failed to delete the post');
+    }
+  };
+
   return (
     <>
-
-      <PostModal id={id} title={title} content={content} open={postModal} handleClose={() => openPostModal(false)} timestamp={timestamp} author={name} />
-      <Card onClick={() => openPostModal(true)} sx={{ width: "100%", borderRadius: "20px" }} elevation={3}>
+      <PostModal id={id} title={title} content={content} open={postModal} handleClose={() => setPostModal(false)} timestamp={timestamp} author={name} />
+      <Card sx={{ width: "100%", position: 'relative', borderRadius: "20px" }} elevation={3} onClick={() => setPostModal(true)}>
+      <IconButton
+        aria-label="delete"
+        onClick={(e) => {
+          e.stopPropagation(); // Prevents the card click event
+          handleDelete(id, e);
+        }}
+        sx={{
+          position: 'absolute', 
+          top: -8, 
+          right: -6, 
+          color: 'red' 
+        }}
+      >
+        <CloseIcon />
+      </IconButton>
         <CardHeader
-          avatar={
-            <div>
-              <Avatar sx={{ bgcolor: 'lightblue' }} aria-label="recipe">
-                {name && name.charAt(0)}
-
-              </Avatar>
-            </div>
-          }
-
+          avatar={<Avatar sx={{ bgcolor: 'lightblue' }}>{name && name.charAt(0)}</Avatar>}
           title={name}
           subheader={(<div className="flex flex-row gap-1"><Chip size="small" label={convertToReadableDate(timestamp)} />
                       {
@@ -87,7 +111,6 @@ export default function PostCard({ id, title, content, user_id, timestamp, categ
                       }</div>)}
         
           />
-        
         <CardMedia
           component="img"
           height="194"
@@ -96,14 +119,12 @@ export default function PostCard({ id, title, content, user_id, timestamp, categ
           sx={{ objectFit: "cover", height: "250px" }}
         />
         <CardContent>
-          <Typography variant="body1" sx={{fontWeight: "bold"}} color="text.primary">
-            {title}
-          </Typography>
+          <Typography variant="body1" sx={{ fontWeight: "bold" }} color="text.primary">{title}</Typography>
           <Typography variant="body2" color="text.primary">
-            {content.replace(/<[^>]*>?/gm, '').length > 30 ? content.replace(/<[^>]*>?/gm, '').substring(0, 30) + '...' : content.replace(/<[^>]*>?/gm, '')}
+            {content.replace(/<[^>]*>?/gm, '').length > 30 ? `${content.replace(/<[^>]*>?/gm, '').substring(0, 30)}...` : content.replace(/<[^>]*>?/gm, '')}
           </Typography>
         </CardContent>
       </Card>
-    </>)
-
+    </>
+  );
 }
