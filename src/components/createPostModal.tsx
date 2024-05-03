@@ -79,7 +79,7 @@ export default function CreatePostModal({ open, handleClose }: { open: boolean, 
                    
 
                 <div className="w-3/5 h-1/8 p-2">
-                    <TextField fullWidth label="Title" onChange={(e) => setTitle(e.target.value)} />
+                    <TextField fullWidth label="Title" onChange={(e: any) => setTitle(e.target.value)} />
                 </div>
 
                 <div className="h-3/4 w-3/4 flex flex-col items-center items-start overflow-auto">

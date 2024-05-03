@@ -8,6 +8,7 @@ export default function Login() {
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [wrongCredentials, setWrongCredentials] = useState(false);
 
   const handleSubmit = async () => {
       const res = await fetch('/api/user/loginUser', {
@@ -22,8 +23,12 @@ export default function Login() {
           credentials: 'include'
       });
 
-      const data = await res.json();
-      router.push('/dashboard');
+      if (!res.ok) {
+        setWrongCredentials(true);
+      }
+      else {
+        router.push('/dashboard');
+      }
   }
 
   const tryToLoginUser = async () => {
@@ -39,8 +44,6 @@ export default function Login() {
         if (res.ok) {
           const data = await res.json();
           router.push("/dashboard");
-        } else {
-          throw new Error('HTTP error');
         }
     }
     catch {
@@ -82,7 +85,7 @@ export default function Login() {
                 id="outlined-basic" 
                 label="Email" 
                 variant="outlined"
-                onChange={(e) => {setEmail(e.target.value)}} />      
+                onChange={(e: any) => {setEmail(e.target.value)}} />      
                 <TextField
                 type="password"
                 sx={{
@@ -92,9 +95,10 @@ export default function Login() {
                 id="outlined-basic" 
                 label="Password" 
                 variant="outlined"
-                onChange={(e) => {setPassword(e.target.value)}} />   
+                onChange={(e: any) => {setPassword(e.target.value)}} />   
+                {wrongCredentials && <p className='text-red-400 text-xs'>Wrong username or password.</p>}
                 <p className="text-xs">Don&apos;t have an account? <Link className="text-blue-700" href="/register">Register.</Link></p>
-            <p className="text-xs">Forgot password? <Link className="text-blue-700" href="/reset-password">Reset password.</Link></p>
+            
             <Button sx={{
               width: 3/7,
               padding: '5x 5px',

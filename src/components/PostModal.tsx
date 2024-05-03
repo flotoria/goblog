@@ -3,13 +3,27 @@ import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
+import { Avatar } from '@mui/material';
 import dynamic from 'next/dynamic';
 import { useEffect, useState } from 'react';
 import CommentComponent from './CommentComponent';
 
+
+function convertToReadableDate(timestamp: string) {
+    const isoTimestamp = timestamp;
+    const date = new Date(isoTimestamp);
+  
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    //@ts-ignore
+    const formattedDate = date.toLocaleDateString('en-US', options);
+    return formattedDate;
+  }
+
 export default function PostModal({ open, handleClose, id, title, content, timestamp, author }: { open: boolean, handleClose: any, id: number, title: string, content: string, timestamp: string, author: string }) {
     const [comment, setComment] = useState('');
     const [listOfComments, setListOfComments] = useState<any[]>([]);
+
+    
     const handleComment = async () => {
         await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/comment/createComment`,
             {
@@ -51,21 +65,37 @@ export default function PostModal({ open, handleClose, id, title, content, times
                     borderRadius: 3
                 }}>
 
-                    <div className="w-1/2 h-full flex flex-col justify-center items-center">
+                    <div className="w-1/2 h-full flex flex-col justify-center items-center overflow-hidden">
                         <div className="w-5/6">
-                            <Typography variant="h4">{title}</Typography>
-                            <Typography variant="h6">Timestamp: {timestamp} </Typography>
-                            <Typography variant="h6">Author: {author} </Typography>
+                            <Typography variant="h4" sx={{fontWeight: "bold", fontSize: "2rem"}}>{title}</Typography>
+                       
+                            <Box sx={{ display: "flex", flexDirection: "row" }}>
+                                <Avatar sx={{ width: 60, height: 60, bgcolor: "lightblue" }} aria-label="recipe">
+                                    {author ? author.charAt(0) : "?"}
+                                </Avatar>
+                                <Box sx={{ display: "flex", flexDirection: "column", justifyContent: "center" }}>
+                                    <Typography sx={{ ml: 1, fontWeight: "bold" }}>
+                                        {author ? author : "Loading..."}
+                                    </Typography>
+                                    <Typography sx={{ ml: 1 }}>
+                                        {convertToReadableDate(timestamp)}
+                                    </Typography>
+            
+            
+                              
+                                </Box>
+
+                            </Box>
                         </div>
 
-                        <div className="w-5/6 h-4/5 bg-gray-200 overflow-auto border-2 border-slate-400 p-2">
+                        <div className="w-5/6 mt-1 h-4/5 bg-gray-100 overflow-auto border-slate-200 drop-shadow-2xl border2 rounded-2xl p-4">
                             <Typography variant="body1">
                                 <div dangerouslySetInnerHTML={{ __html: content }} />
                             </Typography>
                         </div>
                     </div>
-                    <div className="w-1/2 p-2 flex flex-col gap-y-2">
-                        <Typography variant="h5">
+                    <div className="w-1/2 p-6 flex flex-col gap-y-2">
+                        <Typography variant="h5" sx={{fontWeight: "bold"}}>
                             Comments
                         </Typography>
                         <Box sx={{
@@ -89,7 +119,7 @@ export default function PostModal({ open, handleClose, id, title, content, times
                                 flexDirection: "row",
                                 gap: 2
                             }}>
-                            <TextField value={comment} onChange={(e) => setComment(e.target.value)} fullWidth label="Comment" />
+                            <TextField value={comment} onChange={(e: any) => setComment(e.target.value)} fullWidth label="Comment" />
                             <Button variant="contained" onClick={handleComment}>
                                 Comment
                             </Button>

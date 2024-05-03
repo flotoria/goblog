@@ -12,16 +12,36 @@ export default async function handler(
 
   try {
     const postId = req.query.postId;
+    const token = req.cookies['token'];
     if (!postId) {
       return res.status(400).json({ message: "Post ID is required" });
     }
 
+    const userIdResult = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/user/validateUserServer`, {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ token: token }),
+    })
+    const data = await userIdResult.json();
+    const user_id = data.user_id;
+    const post = await sql`SELECT * FROM posts WHERE id = ${postId as string}`;
+    
+
+    //@ts-ignore
+    if (post.rows[0].user_id === user_id) {
     // Use a parameterized query to prevent SQL injection and errors
-    const result = await sql`DELETE FROM posts WHERE id = ${postId as string}`;
-    if (result.rowCount === 0) {
-      return res.status(404).json({ message: "Post not found." });
+      const result = await sql`DELETE FROM posts WHERE id = ${postId as string}`;
+      if (result.rowCount === 0) {
+        return res.status(404).json({ message: "Post not found." });
+      }
+      else {
+        res.status(200).json({ message: "Post deleted successfully." });
+      }
     }
-    res.status(200).json({ message: "Post deleted successfully." });
+   
+    res.status(400).json({ message: "No permission to delete." });
   } catch (error) {
     console.error("Error in deletePost handler:", error);
     res.status(500).json({ message: "Internal server error", error });

@@ -67,7 +67,7 @@ export default function Register() {
                             id="outlined-basic"
                             label="Name"
                             variant="outlined"
-                            onChange={(e) => { setName(e.target.value); }} />
+                            onChange={(e: any) => { setName(e.target.value); }} />
 
                         <FormControl sx={{ width: 0.7 }}>
                             <InputLabel>Gender</InputLabel>
@@ -87,7 +87,7 @@ export default function Register() {
                             label="Phone Number"
                             variant="outlined"
                             value={phoneNumber}
-                            onChange={(e) => setPhoneNumber(e.target.value)} />
+                            onChange={(e: any) => setPhoneNumber(e.target.value)} />
 
                         <TextField sx={{
                             width: 0.7,
@@ -95,7 +95,7 @@ export default function Register() {
                             id="outlined-basic"
                             label="Email"
                             variant="outlined"
-                            onChange={(e) => { setEmail(e.target.value); }} />
+                            onChange={(e: any) => { setEmail(e.target.value); }} />
                         <TextField
                             type="password"
                             sx={{
@@ -105,7 +105,7 @@ export default function Register() {
                             id="outlined-basic"
                             label="Password"
                             variant="outlined"
-                            onChange={(e) => { setPassword(e.target.value); }} />
+                            onChange={(e: any) => { setPassword(e.target.value); }} />
                         <p className="text-xs">Already have an account? <Link className="text-blue-700" href="/login">Login.</Link></p>
                         <Button
                             onClick={handleSubmit}

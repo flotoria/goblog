@@ -16,9 +16,24 @@ export default function UserPage() {
     const [loading, setLoading] = useState(true);
     const router = useRouter();
     const { name, email, userId } = getUserDetails();  
+    const [user, setUser] = useState<any>({});
 
     const user_id = router.query.user_id;
 
+    const getUserInfo = async () => {
+        const res = await fetch(`/api/user/getUserInfo/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                user_id: user_id
+            })
+        });
+
+        const data = await res.json();
+        setUser(data);
+    }
   
     const getPosts = async () => {
 
@@ -40,31 +55,34 @@ export default function UserPage() {
         sessionStorage.clear();
         if (router.query.user_id) {
             getPosts();
+            getUserInfo();
         }
     }, [user_id]);
 
     return (
         
         <DashboardLayout>
-            { user_id === userId.toString() && (
+ 
             <Box sx={{display: "flex", flexDirection: "row"}}>
                 <Avatar sx={{width: 60, height: 60, bgcolor: "lightblue" }} aria-label="recipe">
-                    {name ? name.charAt(0) : "?"}
+                    {user.name ? user.name.charAt(0) : "?"}
                 </Avatar>
                 <Box sx={{display: "flex", flexDirection: "column", justifyContent: "center"}}>
                     <Typography sx={{ml: 1, fontWeight: "bold"}}>
-                        {name ? name : "Loading..."}
+                        {user.name ? user.name : "Loading..."}
                     </Typography>
                     <Typography sx={{ml: 1}}>
-                        {email ? email : "Loading..."}
+                        {user.email ?  user.email : "Loading..."}
                     </Typography>
+                    { user_id === userId.toString() && (
                     <Button onClick={() => router.push("/dashboard/user_settings")}sx={{ml: 1, mt: 0.5}} size="small" variant="contained">
                         Edit Account Info
                     </Button>
+                    )}
                 </Box>
                 
             </Box>
-            )}
+
             { !loading ? 
           (
             <PostGrid posts={posts} />

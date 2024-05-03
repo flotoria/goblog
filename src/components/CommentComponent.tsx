@@ -8,6 +8,15 @@ import Typography from '@mui/material/Typography';
 import CardHeader from '@mui/material/CardHeader';
 import Avatar from '@mui/material/Avatar';
 
+function convertToReadableDate(timestamp: string) {
+  const isoTimestamp = timestamp;
+  const date = new Date(isoTimestamp);
+
+  const options = { year: 'numeric', month: 'long', day: 'numeric' };
+  //@ts-ignore
+  const formattedDate = date.toLocaleDateString('en-US', options);
+  return formattedDate;
+}
 
 export default function CommentComponent({commenter_id, content, timestamp}: {commenter_id: number, content: string, timestamp: string}) {
     const [name, setName] = useState('');
@@ -49,7 +58,7 @@ export default function CommentComponent({commenter_id, content, timestamp}: {co
           </Avatar>
         }
         title={name}
-        subheader={timestamp}
+        subheader={convertToReadableDate(timestamp)}
       />
          <CardContent>
         <Typography variant="body2">

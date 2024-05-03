@@ -13,9 +13,9 @@ export default async function handler(
 ) {
   try {
     if (req.method === "PATCH") {
-        const { email } = req.body;
+        const { password } = req.body;
         const token = req.cookies['token'];
-        if (!token || !email) {
+        if (!token || !password) {
           return res.status(400).json({ message: "Missing required fields." });
         } 
         const result = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/user/validateUserServer`, {
@@ -28,10 +28,12 @@ export default async function handler(
         const data = await result.json();
         const user_id = data.user_id;
 
+        const saltRounds = 10;
+        const hash = await bcrypt.hash(password, saltRounds);
 
-        await sql`UPDATE users SET email=${email} WHERE id=${user_id};`
-        await sql`UPDATE logins SET user_email=${email} WHERE user_id=${user_id};`
-        return res.status(200).json({message: "Email changed successfully."});   
+    
+        await sql`UPDATE logins SET hashed_password=${hash} WHERE user_id=${user_id};`
+        return res.status(200).json({message: "Password changed successfully."});   
     }
     else {
       return res.status(405).json({ message: "Method not allowed." });

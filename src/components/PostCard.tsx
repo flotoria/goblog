@@ -1,7 +1,11 @@
-import { Box, Chip, Card, CardHeader, CardMedia, CardContent, Avatar, Typography, IconButton } from '@mui/material';
+import { Box, Chip, Card, CardHeader, CardMedia, CardContent, Avatar, Typography, IconButton, CardActions } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { useState, useEffect, MouseEvent } from 'react';
 import PostModal from './PostModal';
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import IosShareOutlinedIcon from '@mui/icons-material/IosShareOutlined';
+import { getUserDetails } from '@/hooks/userHooks';
+import { useRouter } from 'next/router';
 
 interface PostCardProps {
   id: number;
@@ -25,7 +29,9 @@ function convertToReadableDate(timestamp: string) {
 export default function PostCard({ id, title, content, user_id, timestamp, category_id }: PostCardProps) {
   const [name, setName] = useState('');
   const [postModal, setPostModal] = useState(false);
-  const categories: {[key: number]: string} = {0: 'All', 1: 'Tech', 2: 'Design', 3: 'Business', 4: 'Health', 5: 'Games'};
+  const categories: { [key: number]: string } = { 0: 'All', 1: 'Tech', 2: 'Design', 3: 'Business', 4: 'Health', 5: 'Games' };
+  const { userId } = getUserDetails();
+  const router = useRouter();
 
   const getFirstImage = (htmlString: string) => {
     const parser = new DOMParser();
@@ -64,7 +70,7 @@ export default function PostCard({ id, title, content, user_id, timestamp, categ
   const handleDelete = async (postId: number, e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();  // Prevents the card click event
     if (!confirm('Are you sure you want to delete this post?')) return;
-  
+
     try {
       const response = await fetch(`/api/post/deletePost?postId=${postId}`, {
         method: 'DELETE',
@@ -73,6 +79,7 @@ export default function PostCard({ id, title, content, user_id, timestamp, categ
       const data = await response.json();
       if (response.ok) {
         alert('Post deleted successfully');
+        window.location.reload();
       } else {
         alert(data.message);  // Server-side error message
       }
@@ -85,32 +92,20 @@ export default function PostCard({ id, title, content, user_id, timestamp, categ
   return (
     <>
       <PostModal id={id} title={title} content={content} open={postModal} handleClose={() => setPostModal(false)} timestamp={timestamp} author={name} />
-      <Card sx={{ width: "100%", position: 'relative', borderRadius: "20px" }} elevation={3} onClick={() => setPostModal(true)}>
-      <IconButton
-        aria-label="delete"
-        onClick={(e) => {
-          e.stopPropagation(); // Prevents the card click event
-          handleDelete(id, e);
-        }}
-        sx={{
-          position: 'absolute', 
-          top: -8, 
-          right: -6, 
-          color: 'red' 
-        }}
-      >
-        <CloseIcon />
-      </IconButton>
+      <Card sx={{ width: "100%", position: 'relative', borderRadius: "20px" , height: 460}} elevation={3} onClick={() => setPostModal(true)}>
         <CardHeader
           avatar={<Avatar sx={{ bgcolor: 'lightblue' }}>{name && name.charAt(0)}</Avatar>}
           title={name}
-          subheader={(<div className="flex flex-row gap-1"><Chip size="small" label={convertToReadableDate(timestamp)} />
-                      {
-                        category_id &&
-                        <Chip size="small" label={categories[category_id]} />
-                      }</div>)}
-        
-          />
+          onClick={() => router.push("/dashboard/user/" + user_id.toString())}
+          subheader={(<div className="flex flex-row gap-1"><Chip size="small" label={convertToReadableDate(timestamp)} 
+       />
+      
+            {
+              category_id &&
+              <Chip size="small" label={categories[category_id]} />
+            }</div>)}
+
+        />
         <CardMedia
           component="img"
           height="194"
@@ -124,6 +119,37 @@ export default function PostCard({ id, title, content, user_id, timestamp, categ
             {content.replace(/<[^>]*>?/gm, '').length > 30 ? `${content.replace(/<[^>]*>?/gm, '').substring(0, 30)}...` : content.replace(/<[^>]*>?/gm, '')}
           </Typography>
         </CardContent>
+        <CardActions>
+          { userId === user_id && 
+          <IconButton
+            aria-label="delete"
+            onClick={(e: any) => {
+              e.stopPropagation(); // Prevents the card click event
+              handleDelete(id, e);
+            }}
+            sx={{
+              color: 'gray',
+  
+            }}
+          >
+            <DeleteOutlineIcon/>
+         
+          </IconButton>
+      
+          }
+
+          <IconButton
+            aria-label="delete"
+            sx={{
+              color: 'gray'
+            }}
+          >
+            <IosShareOutlinedIcon />
+         
+          </IconButton>
+          
+          
+        </CardActions>
       </Card>
     </>
   );
