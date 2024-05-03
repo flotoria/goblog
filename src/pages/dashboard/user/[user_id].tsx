@@ -65,7 +65,7 @@ export default function UserPage() {
  
             <Box sx={{display: "flex", flexDirection: "row"}}>
                 <Avatar sx={{width: 60, height: 60, bgcolor: "lightblue" }} aria-label="recipe">
-                    {user.name ? user.name.charAt(0) : "?"}
+                {user.picture ? (<img src={user.picture} style={{width: '100%', height: '100%', objectFit: 'cover'}} />) : user.name && user.name.charAt(0)}
                 </Avatar>
                 <Box sx={{display: "flex", flexDirection: "column", justifyContent: "center"}}>
                     <Typography sx={{ml: 1, fontWeight: "bold"}}>

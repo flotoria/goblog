@@ -19,7 +19,7 @@ function convertToReadableDate(timestamp: string) {
     return formattedDate;
   }
 
-export default function PostModal({ open, handleClose, id, title, content, timestamp, author }: { open: boolean, handleClose: any, id: number, title: string, content: string, timestamp: string, author: string }) {
+export default function PostModal({ open, handleClose, id, title, content, timestamp, author, picture_url }: { open: boolean, handleClose: any, id: number, title: string, content: string, timestamp: string, author: string, picture_url: string }) {
     const [comment, setComment] = useState('');
     const [listOfComments, setListOfComments] = useState<any[]>([]);
 
@@ -71,7 +71,8 @@ export default function PostModal({ open, handleClose, id, title, content, times
                        
                             <Box sx={{ display: "flex", flexDirection: "row" }}>
                                 <Avatar sx={{ width: 60, height: 60, bgcolor: "lightblue" }} aria-label="recipe">
-                                    {author ? author.charAt(0) : "?"}
+                                    {picture_url ? (<img src={picture_url} style={{width: '100%', height: '100%', objectFit: 'cover'}} />) : (author ? author.charAt(0) : "?")}
+             
                                 </Avatar>
                                 <Box sx={{ display: "flex", flexDirection: "column", justifyContent: "center" }}>
                                     <Typography sx={{ ml: 1, fontWeight: "bold" }}>

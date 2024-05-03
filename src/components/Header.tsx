@@ -13,6 +13,7 @@ export default function Header() {
     const [id, setId] = useState(0);
     const router = useRouter();
     const { userId, name } = getUserDetails();
+    const [picture, setPicture] = useState('');
 
     const handleLogout = () => {
         setDrawerOpen(!drawerOpen);
@@ -26,10 +27,30 @@ export default function Header() {
         });
     }
 
+    const fetchPicture = async () => {
+        fetch('/api/user/getUserInfo', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                user_id: userId
+            })
+        }).then(res => res.json()).then(data => {
+            setPicture(data.picture);
+        }
+        )
+    }
+
    
     useEffect(() => {
         setId(userId);
+        
     }, [loading]);
+
+    useEffect(() => {
+        fetchPicture();
+    }, [id]);
 
     return (
         <header className="bg-slate-100 text-white w-full flex flex-row h-12 drop-shadow-md sticky z-[9999]">
@@ -40,7 +61,7 @@ export default function Header() {
                 <CreatePostModal open={postModal} handleClose={() => openPostModal(false)} />
                 <Button sx={{ height: 0.75, whiteSpace: "nowrap" }} variant="contained" onClick={() => openPostModal(true)} >Create Post</Button>
                 <div>
-                    <Avatar onClick={() => { setDrawerOpen(!drawerOpen) }} sx={{ bgcolor: 'lightblue' }} className="ml-3">{name && name.charAt(0)}</Avatar>
+                    <Avatar onClick={() => { setDrawerOpen(!drawerOpen) }} sx={{ bgcolor: 'lightblue' }} className="ml-3">{picture ? (<img src={picture} style={{width: '100%', height: '100%', objectFit: 'cover'}} />) : name && name.charAt(0)}</Avatar>
                     {drawerOpen && (
                         <div className="absolute right-0">
                             <Paper>

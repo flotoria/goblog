@@ -18,6 +18,7 @@ export default async function handler(
         if (!token || !password) {
           return res.status(400).json({ message: "Missing required fields." });
         } 
+        
         const result = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/user/validateUserServer`, {
             method: 'POST',
             headers: {

@@ -20,12 +20,8 @@ function convertToReadableDate(timestamp: string) {
 
 export default function CommentComponent({commenter_id, content, timestamp}: {commenter_id: number, content: string, timestamp: string}) {
     const [name, setName] = useState('');
+    const [picture, setPicture] = useState('');
     const getUserData = async () => {
-          const cachedName = sessionStorage.getItem(commenter_id.toString());
-          if (cachedName) {
-            setName(cachedName);
-            return;
-          }
 
         const data = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/user/getUserInfo`, 
           {
@@ -42,6 +38,8 @@ export default function CommentComponent({commenter_id, content, timestamp}: {co
         sessionStorage.setItem(commenter_id.toString(), userData.name);
 
         setName(userData.name);
+        setPicture(userData.picture);
+   
 
 
       }
@@ -54,7 +52,7 @@ export default function CommentComponent({commenter_id, content, timestamp}: {co
         <CardHeader
         avatar={
           <Avatar sx={{ bgcolor: "lightblue" }} aria-label="recipe">
-            {name && name.charAt(0)}
+            {picture ? (<img src={picture} style={{width: '100%', height: '100%', objectFit: 'cover'}} />) : name && name.charAt(0)}
           </Avatar>
         }
         title={name}

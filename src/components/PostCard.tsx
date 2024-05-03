@@ -7,6 +7,7 @@ import IosShareOutlinedIcon from '@mui/icons-material/IosShareOutlined';
 import { getUserDetails } from '@/hooks/userHooks';
 import { useRouter } from 'next/router';
 
+
 interface PostCardProps {
   id: number;
   title: string;
@@ -28,6 +29,7 @@ function convertToReadableDate(timestamp: string) {
 
 export default function PostCard({ id, title, content, user_id, timestamp, category_id }: PostCardProps) {
   const [name, setName] = useState('');
+  const [picture, setPicture] = useState('');
   const [postModal, setPostModal] = useState(false);
   const categories: { [key: number]: string } = { 0: 'All', 1: 'Tech', 2: 'Design', 3: 'Business', 4: 'Health', 5: 'Games' };
   const { userId } = getUserDetails();
@@ -61,6 +63,7 @@ export default function PostCard({ id, title, content, user_id, timestamp, categ
     sessionStorage.setItem(user_id.toString(), userData.name);
 
     setName(userData.name);
+    setPicture(userData.picture);
   }
 
   useEffect(() => {
@@ -91,10 +94,10 @@ export default function PostCard({ id, title, content, user_id, timestamp, categ
 
   return (
     <>
-      <PostModal id={id} title={title} content={content} open={postModal} handleClose={() => setPostModal(false)} timestamp={timestamp} author={name} />
+      <PostModal id={id} title={title} content={content} open={postModal} picture_url={picture} handleClose={() => setPostModal(false)} timestamp={timestamp} author={name} />
       <Card sx={{ width: "100%", position: 'relative', borderRadius: "20px" , height: 460}} elevation={3} onClick={() => setPostModal(true)}>
         <CardHeader
-          avatar={<Avatar sx={{ bgcolor: 'lightblue' }}>{name && name.charAt(0)}</Avatar>}
+          avatar={<Avatar sx={{ bgcolor: 'lightblue' }}>{picture ? (<img src={picture} style={{width: '100%', height: '100%', objectFit: 'cover'}} />) : name && name.charAt(0)}</Avatar>}
           title={name}
           onClick={() => router.push("/dashboard/user/" + user_id.toString())}
           subheader={(<div className="flex flex-row gap-1"><Chip size="small" label={convertToReadableDate(timestamp)} 

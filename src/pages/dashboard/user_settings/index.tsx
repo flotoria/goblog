@@ -4,6 +4,21 @@ import { TextField, Button, Box, FormControl, InputLabel, Select, MenuItem } fro
 import { useState } from "react";
 import { SelectChangeEvent } from '@mui/material/Select';
 
+// Function to get file extension from MIME type
+function getExtension(mimeType: string) {
+    switch (mimeType) {
+      case 'image/jpeg':
+        return 'jpg';
+      case 'image/png':
+        return 'png';
+      case 'image/gif':
+        return 'gif';
+      default:
+        return '';
+    }
+  }
+  
+
 export default function UserSettings() {
 
     const { name, email, gender } = getUserDetails();
@@ -12,6 +27,38 @@ export default function UserSettings() {
     const [newEmail, setNewEmail] = useState(email);
     const [password, setPassword] = useState('');
     const [newGender, setNewGender] = useState(gender);
+
+    const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+        if (event.target.files && event.target.files[0]) {
+          const file = event.target.files[0];
+          const fileType = file.type;
+
+
+        if (!file.type.startsWith('image/')) {
+            console.error('Selected file is not an image');
+            return;
+        }   
+      
+          const reader = new FileReader();
+          reader.onloadend = () => {
+            // The result attribute contains the Base64 string
+            const base64String = reader.result as string;
+  
+            fetch('/api/user/addUserProfilePicture', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    profile_picture: base64String,
+                    type: getExtension(fileType)
+                })
+            }) 
+          };
+      
+          reader.readAsDataURL(file);
+        }
+      };
 
     const onSubmitChangeName = () => {
         fetch('/api/user/changeUserName', {
@@ -89,6 +136,18 @@ export default function UserSettings() {
 
                 <TextField type="password" value={password} onChange={(e: any) => setPassword(e.target.value)} label="Password" variant="outlined" />
                 <Button variant="contained" onClick={onSubmitChangePassword}>Change Password</Button>
+                <Button
+                    variant="contained"
+                    component="label"
+     
+                >
+                    Update Profile Picture
+                    <input
+                        type="file"
+                        hidden
+                        onChange={handleFileChange}
+                    />
+                </Button>
             </Box>
         </DashboardLayout>
     )

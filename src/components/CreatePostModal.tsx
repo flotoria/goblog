@@ -116,6 +116,7 @@ export default function CreatePostModal({ open, handleClose }: { open: boolean, 
                             </Select>
                         </FormControl>
                     </Box>
+                    
                     <Button variant="contained" onClick={handleSubmit}>Upload</Button>
                 </div>
             </Box>
