@@ -23,6 +23,6 @@ export default async function handler(
         const result = await sql`SELECT * FROM posts;`
         return res.status(200).json(result.rows);
     } catch (error) {
-        return res.status(500).json({ message: "Internal server error.", error: error});
+        return res.status(500).json({ message: "Internal server error.", error: `${process.env.NEXT_PUBLIC_BASE_URL}`});
     }
 }
