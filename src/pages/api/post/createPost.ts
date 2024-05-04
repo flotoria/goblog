@@ -46,7 +46,7 @@ export default async function handler(
             'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`
           },
           body: JSON.stringify({
-            "model": "dall-e-3",
+            "model": "dall-e-2",
             "prompt": `Generate an image based on the following text -
             The title is: ${title}, the content is ${contents}. 
             If the content does not make sense to DALLE, generate a random image.`,

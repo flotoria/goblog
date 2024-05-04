@@ -2,8 +2,11 @@ import Image from "next/image";
 import { Avatar, Button, Paper, MenuList, MenuItem } from "@mui/material";
 import CreatePostModal from "./CreatePostModal";
 import { useEffect, useState } from "react";
+import { InputAdornment, TextField } from "@mui/material";
 import { useRouter } from "next/router";
 import { getUserDetails, setUserDetails } from "@/hooks/userHooks";
+import AccountCircle from '@mui/icons-material/AccountCircle';
+
 
 export default function Header() {
 
@@ -42,10 +45,10 @@ export default function Header() {
         )
     }
 
-   
+
     useEffect(() => {
         setId(userId);
-        
+
     }, [loading]);
 
     useEffect(() => {
@@ -54,14 +57,14 @@ export default function Header() {
 
     return (
         <header className="bg-slate-100 text-white w-full flex flex-row h-12 drop-shadow-md sticky z-[9995]">
-            <div className="w-1/2" onClick={() => router.push("/dashboard")}>
-                <Image src="/logo.png" className="w-12 h-12" alt="Logo" width={600} height={600} />
+            <div className="w-1/2 flex flex-row items-center" >
+                <Image src="/logo.png" className="w-12 h-12" alt="Logo" width={600} height={600} onClick={() => router.push("/dashboard")} />
             </div>
             <div className="w-1/2 items-center flex flex-row justify-end px-2">
                 <CreatePostModal open={postModal} handleClose={() => openPostModal(false)} />
                 <Button sx={{ height: 0.75, whiteSpace: "nowrap" }} variant="contained" onClick={() => openPostModal(true)} >Create Post</Button>
                 <div>
-                    <Avatar onClick={() => { setDrawerOpen(!drawerOpen) }} sx={{ bgcolor: 'lightblue' }} className="ml-3">{picture ? (<img src={picture} style={{width: '100%', height: '100%', objectFit: 'cover'}} />) : name && name.charAt(0)}</Avatar>
+                    <Avatar onClick={() => { setDrawerOpen(!drawerOpen) }} sx={{ bgcolor: 'lightblue' }} className="ml-3">{picture ? (<img src={picture} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />) : name && name.charAt(0)}</Avatar>
                     {drawerOpen && (
                         <div className="absolute right-0">
                             <Paper>

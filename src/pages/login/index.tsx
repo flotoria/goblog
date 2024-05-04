@@ -61,7 +61,6 @@ export default function Login() {
     <div className="w-full h-screen bg-slate-200 flex justify-center items-center">
       <div className="w-1/2 flex justify-center items-center">
         <Image src="/logo.png" className="ml-20 w-1/4 h-1/4 rounded-full drop-shadow-lg" alt="Logo" width={600} height={600} />
-        <h1 className="text-[2vw] font-bold">GoBlog</h1>
       </div>
       <div className="w-1/2">
         <div className="w-96 h-96 rounded-3xl bg-slate-100 drop-shadow-md overflow-hidden">
