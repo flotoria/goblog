@@ -45,7 +45,7 @@ export default function Home() {
     <>
 
 
-      <div className="h-screen bg-black flex flex-row items-center">
+      <div className="min-h-screen bg-black flex flex-row items-center">
         <SparklesPreview />
       </div>
       <div className="absolute flex flex-row h-screen top-0 left-0 right-0 justify-center items-center gap-x-2 mt-3">

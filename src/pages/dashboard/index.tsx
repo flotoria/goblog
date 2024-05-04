@@ -22,6 +22,7 @@ export default function Dashboard() {
   const [posts, setPosts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [filteredPosts, setFilteredPosts] = useState<any[]>([]);
+  const [queryInput, setQueryInput] = useState("");
   const router = useRouter();
 
   type CategoryKey = 'All' | 'Tech' | 'Design' | 'Business' | 'Health' | 'Games';
@@ -51,6 +52,34 @@ export default function Dashboard() {
     setLoading(false);
   };
 
+  const getPostsBasedOnQuery = async () => {
+    if (queryInput !== "") {
+    setLoading(true);
+    try {
+      const res = await fetch(`/api/post/getAllPostsWithQuery?query=${queryInput}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      const data = await res.json();
+
+      if (Array.isArray(data)) {
+        setPosts(data);
+      } else {
+        console.error('Data fetched is not an array:', data);
+        setPosts([]); 
+      }
+    } catch (error) {
+      console.error("Error fetching posts:", error);
+      setPosts([]); 
+    }
+    setLoading(false);
+  } else {
+    getPosts();
+  }
+  };
+
   const categories: { [key: string]: number } = { 'All': 0, 'Tech': 1, 'Design': 2, 'Business': 3, 'Health': 4, 'Games': 5 };
 
   const handleCategoryChange = (category: CategoryKey) => {
@@ -62,9 +91,7 @@ export default function Dashboard() {
     getPosts();
   }, []);
 
-  // useEffect(() => {
-  //     setFilteredPosts(posts.filter(post => selectedCategory === 'All' || post.category_id === categories[selectedCategory]));
-  // }, [posts, selectedCategory])
+
   useEffect(() => {
     if (Array.isArray(posts)) {
       const filtered = posts.filter(post =>
@@ -74,21 +101,15 @@ export default function Dashboard() {
       setFilteredPosts(filtered);
     }
   }, [posts, selectedCategory]);
-  // useEffect(() => {
-  //     const result = [];
-  //     for (let i = 0; i < posts.length; i++) {
-  //         if (selectedCategory === 'All' || posts[i].category_id === categories[selectedCategory]) {
-  //             result.push(posts[i]);
-  //         }
-  //     }
-  //     setFilteredPosts(result);
-  // }, [posts, selectedCategory]);    
+  
   return (
     <DashboardLayout>
       <Box sx={{height: 1}}>
         <TextField
           id="input-with-search"
           label=""
+          value={queryInput}
+          onChange={(e) => setQueryInput(e.target.value)}
           sx={{ mb: 2 }}
           InputProps={{
             startAdornment: (
@@ -99,7 +120,7 @@ export default function Dashboard() {
           }}
           variant="standard"
         />
-        <Button sx={{ height: 30, ml: 2, whiteSpace: "nowrap" }} variant="outlined">Search</Button>
+        <Button sx={{ height: 30, ml: 2, whiteSpace: "nowrap" }} variant="outlined" onClick={getPostsBasedOnQuery}>Search</Button>
       </Box>
       <Box sx={{ display: "flex", gap: 1 }}>
         {Object.keys(categories).map((category) => (
