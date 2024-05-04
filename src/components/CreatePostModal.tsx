@@ -65,7 +65,7 @@ export default function CreatePostModal({ open, handleClose }: { open: boolean, 
         <Modal
             open={open}
             onClose={handleClose}  
-            sx={{ zIndex: 9999999 }}
+            sx={{ zIndex: 9999 }}
         >
             <div className="h-screen w-full flex justify-center items-center">
                 <Box sx={{
@@ -109,7 +109,7 @@ export default function CreatePostModal({ open, handleClose }: { open: boolean, 
                                     value={selectedCategory}
                                     label="Category"
                                     onChange={(e) => setSelectedCategory(e.target.value)}
-                                    MenuProps={{ style: { zIndex: 9999 } }}
+                                    MenuProps={{ style: { zIndex: 999999 } }}
                                 >
 
                                 {Object.keys(categories).map((category, index) => (
