@@ -65,7 +65,7 @@ export default function CreatePostModal({ open, handleClose }: { open: boolean, 
         <Modal
             open={open}
             onClose={handleClose}  
-            sx={{ zIndex: 9999 }}
+            sx={{ zIndex: 9999999 }}
         >
             <div className="h-screen w-full flex justify-center items-center">
                 <Box sx={{

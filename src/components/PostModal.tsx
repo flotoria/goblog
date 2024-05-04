@@ -54,7 +54,7 @@ export default function PostModal({ open, handleClose, id, title, content, times
         <Modal
             open={open}
             onClose={handleClose}
-            sx={{ zIndex: 9995 }}
+            sx={{ zIndex: 9999 }}
         >
             <div className="h-screen w-full flex justify-center items-center">
                 <Box sx={{
@@ -122,7 +122,7 @@ export default function PostModal({ open, handleClose, id, title, content, times
                                 gap: 2
                             }}>
                             <TextField value={comment} onChange={(e: any) => setComment(e.target.value)} fullWidth label="Comment" />
-                            <Button variant="contained" onClick={handleComment}>
+                            <Button variant="contained" disabled={comment.length == 0} onClick={handleComment}>
                                 Comment
                             </Button>
                         </Box>

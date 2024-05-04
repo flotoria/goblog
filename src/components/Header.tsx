@@ -53,7 +53,7 @@ export default function Header() {
     }, [id]);
 
     return (
-        <header className="bg-slate-100 text-white w-full flex flex-row h-12 drop-shadow-md sticky z-[9999]">
+        <header className="bg-slate-100 text-white w-full flex flex-row h-12 drop-shadow-md sticky z-[9995]">
             <div className="w-1/2" onClick={() => router.push("/dashboard")}>
                 <Image src="/logo.png" className="w-12 h-12" alt="Logo" width={600} height={600} />
             </div>
