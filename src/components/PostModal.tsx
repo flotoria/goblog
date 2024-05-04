@@ -38,6 +38,7 @@ export default function PostModal({ open, handleClose, id, title, content, times
                 })
             });
         await getComments();
+        setComment('');
     }
 
     const getComments = async () => {
@@ -122,7 +123,7 @@ export default function PostModal({ open, handleClose, id, title, content, times
                                 gap: 2
                             }}>
                             <TextField value={comment} onChange={(e: any) => setComment(e.target.value)} fullWidth label="Comment" />
-                            <Button variant="contained" disabled={comment.length == 0} onClick={handleComment}>
+                            <Button variant="contained" disabled={comment.length == 0}  value={comment} onClick={handleComment}>
                                 Comment
                             </Button>
                         </Box>

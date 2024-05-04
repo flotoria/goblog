@@ -84,6 +84,7 @@ export default function PostPage() {
                 })
             });
         await getComments();
+        setComment('');
     }
 
     const getComments = async () => {
@@ -165,7 +166,7 @@ export default function PostPage() {
                             gap: 2
                         }}>
                         <TextField value={comment} onChange={(e: any) => setComment(e.target.value)} fullWidth label="Comment" />
-                        <Button variant="contained" onClick={handleComment}>
+                        <Button variant="contained" disabled={comment.length == 0} value={comment} onClick={handleComment}>
                             Comment
                         </Button>
                     </Box>
