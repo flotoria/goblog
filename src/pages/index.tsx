@@ -2,7 +2,6 @@ import Image from "next/image";
 import { Inter } from "next/font/google";
 import { Button, Box, Typography } from "@mui/material";
 import { useRouter } from "next/router";
-import { LampDemo } from "@/ui/lamp";
 import { WavyBackground } from "@/ui/wavy-background";
 import { SparklesCore } from "@/ui/sparkles";
 
