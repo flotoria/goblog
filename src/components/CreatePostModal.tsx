@@ -49,6 +49,7 @@ export default function CreatePostModal({ open, handleClose }: { open: boolean, 
         })
         setDisableButton(false);
         handleClose();
+        window.location.reload();
     }
 
     useEffect(() => {
