@@ -20,9 +20,9 @@ export default async function handler(
   try {
     if (req.method === "POST") {
       const cookies = cookie.parse(req.headers.cookie || '');
-      const { title, contents, category } = req.body;
+      const { title, contents, category, post_id } = req.body;
       const selectedCategoryID = category || null;
-      if (!title || !contents) {
+      if (!title || !contents || !post_id) {
         return res.status(400).json({ message: "Missing required fields." });
       }
       const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/user/validateUserServer`, {
@@ -64,12 +64,12 @@ export default async function handler(
           access: 'public',
       });
 
-        await sql`INSERT INTO posts (title, contents, user_id, category_id, thumbnail) VALUES (${title}, ${contents}, ${data.user_id}, ${selectedCategoryID}, ${url});`
-        return res.status(200).json("Post created successfully.");
+        await sql`UPDATE posts SET title=${title}, contents=${contents}, category_id=${selectedCategoryID}, thumbnail=${url} WHERE id=${post_id} AND user_id=${data.user_id};`
+        return res.status(200).json("Post edited successfully.");
       }
 
-      await sql`INSERT INTO posts (title, contents, user_id, category_id) VALUES (${title}, ${contents}, ${data.user_id}, ${selectedCategoryID});`
-      return res.status(200).json("Post created successfully.");
+      await sql`UPDATE posts SET title=${title}, contents=${contents}, category_id=${selectedCategoryID} WHERE id=${post_id} AND user_id=${data.user_id};`
+      return res.status(200).json("Post edited successfully.");
 
     }
     else {

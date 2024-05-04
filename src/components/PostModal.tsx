@@ -22,6 +22,7 @@ function convertToReadableDate(timestamp: string) {
 export default function PostModal({ open, handleClose, id, title, content, timestamp, author, picture_url }: { open: boolean, handleClose: any, id: number, title: string, content: string, timestamp: string, author: string, picture_url: string }) {
     const [comment, setComment] = useState('');
     const [listOfComments, setListOfComments] = useState<any[]>([]);
+    const [updateCommentsIndicator, setUpdateCommentsIndicator] = useState(0);
 
     
     const handleComment = async () => {
@@ -47,13 +48,13 @@ export default function PostModal({ open, handleClose, id, title, content, times
 
     useEffect(() => {
         getComments();
-    }, []);
+    }, [updateCommentsIndicator]);
 
     return (
         <Modal
             open={open}
             onClose={handleClose}
-            sx={{ zIndex: 9999999 }}
+            sx={{ zIndex: 9995 }}
         >
             <div className="h-screen w-full flex justify-center items-center">
                 <Box sx={{
@@ -109,7 +110,7 @@ export default function PostModal({ open, handleClose, id, title, content, times
                             {
                                 listOfComments.map((comment, index) => {
                                     return (
-                                        <CommentComponent key={index} commenter_id={comment.commenter_id} content={comment.content} timestamp={comment.timestamp} />
+                                        <CommentComponent key={index} comment_id={comment.id} commenter_id={comment.commenter_id} content={comment.content} timestamp={comment.timestamp} refresh={() => setUpdateCommentsIndicator(oldKey => oldKey + 1)} />
                                     )
                                 })
                             }

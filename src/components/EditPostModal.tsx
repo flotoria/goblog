@@ -9,14 +9,30 @@ import dynamic from 'next/dynamic';
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 import 'react-quill/dist/quill.snow.css';
 
-export default function CreatePostModal({ open, handleClose }: { open: boolean, handleClose: any }) {
+export default function EditPostModal({ open, handleClose, postID }: { open: boolean, handleClose: any, postID: number }) {
 
     const [editorHtml, setEditorHtml] = useState('');
     const [title, setTitle] = useState('');
     const [loadEditor, setLoadEditor] = useState(false);
     const [selectedCategory, setSelectedCategory] = useState('All');
     const categories:{ [key: string]: number } = { 'All': 0, 'Tech': 1, 'Design': 2, 'Business': 3, 'Health': 4, 'Games': 5 };
+    const categoriesByKey:{ [key: number]: string } = { 0: 'All', 1: 'Tech', 2: 'Design', 3: 'Business', 4: 'Health', 5: 'Games' };
     const [disableButton, setDisableButton] = useState(false);
+    
+    const getPostContent = async () => {
+        const res = await fetch(`/api/post/getPostInfo/?post_id=${postID}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        const data = await res.json();
+        setTitle(data.title);
+        setEditorHtml(data.contents);
+        setSelectedCategory(categoriesByKey[data.category_id]);
+    }
+
     
     const handleChange = (html: any) => {
         setEditorHtml(html);
@@ -35,7 +51,7 @@ export default function CreatePostModal({ open, handleClose }: { open: boolean, 
 
     const handleSubmit = async () => {
         setDisableButton(true);
-        await fetch('/api/post/createPost', {
+        await fetch('/api/post/editPost', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -43,16 +59,19 @@ export default function CreatePostModal({ open, handleClose }: { open: boolean, 
             body: JSON.stringify({
                 title: title,
                 contents: editorHtml,
-                category: categories[selectedCategory]
+                category: categories[selectedCategory],
+                post_id: postID
             })
 
         })
         setDisableButton(false);
         handleClose();
         window.location.reload();
+
     }
 
     useEffect(() => {
+        getPostContent();
         if (open) {
             setLoadEditor(true);
         } else {
@@ -82,7 +101,7 @@ export default function CreatePostModal({ open, handleClose }: { open: boolean, 
                    
 
                 <div className="w-3/5 h-1/8 p-2">
-                    <TextField fullWidth label="Title" onChange={(e: any) => setTitle(e.target.value)} />
+                    <TextField fullWidth label="Title" value={title} onChange={(e: any) => setTitle(e.target.value)} />
                 </div>
 
                 <div className="h-3/4 w-3/4 flex flex-col items-center items-start overflow-auto">
@@ -99,7 +118,7 @@ export default function CreatePostModal({ open, handleClose }: { open: boolean, 
                     )}
                 </div>
 
-                <div className="h-1/8 mt-2 flex flex-col justify-center items-center"> 
+                <div className="h-1/8 flex mt-2 flex-col justify-center items-center"> 
                 <Box sx={{ width: '100%', marginBottom: 2 }}>
                             <FormControl fullWidth sx={{ }}>
                                 <InputLabel id="category-select-label">Category</InputLabel>

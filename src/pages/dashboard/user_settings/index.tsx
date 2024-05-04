@@ -1,6 +1,6 @@
 import DashboardLayout from "@/components/DashboardLayout";
 import { getUserDetails } from "@/hooks/userHooks";
-import { TextField, Button, Box, FormControl, InputLabel, Select, MenuItem } from "@mui/material";
+import { TextField, Button, Box, FormControl, InputLabel, Select, MenuItem, Snackbar } from "@mui/material";
 import { useState } from "react";
 import { SelectChangeEvent } from '@mui/material/Select';
 
@@ -27,6 +27,8 @@ export default function UserSettings() {
     const [newEmail, setNewEmail] = useState(email);
     const [password, setPassword] = useState('');
     const [newGender, setNewGender] = useState(gender);
+    const [openSnackbar, setOpenSnackbar] = useState(false);    
+    
 
     const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.files && event.target.files[0]) {
@@ -58,6 +60,7 @@ export default function UserSettings() {
       
           reader.readAsDataURL(file);
         }
+        setOpenSnackbar(true);
       };
 
     const onSubmitChangeName = () => {
@@ -70,6 +73,7 @@ export default function UserSettings() {
                 name: newName
             })
         })
+        setOpenSnackbar(true);
     }
 
     const onSubmitChangeGender = () => {
@@ -82,6 +86,7 @@ export default function UserSettings() {
                 gender: newGender
             })
         })
+        setOpenSnackbar(true);
     }
 
     const onSubmitChangeEmail = () => {
@@ -94,6 +99,7 @@ export default function UserSettings() {
                 email: newEmail
             })
         })
+        setOpenSnackbar(true);
     }
 
     const onSubmitChangePassword = () => {
@@ -106,11 +112,18 @@ export default function UserSettings() {
                 password: password
             })
         })
+        setOpenSnackbar(true);
     }
 
 
     return (
         <DashboardLayout>
+            <Snackbar
+                open={openSnackbar}
+                autoHideDuration={2000}
+                onClose={() => setOpenSnackbar(false)}
+                message="Account settings changed."
+                />
             <Box sx={{
                 display: "flex",
                 flexDirection: "column",
