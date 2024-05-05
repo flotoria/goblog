@@ -9,8 +9,7 @@ import dynamic from 'next/dynamic';
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 import 'react-quill/dist/quill.snow.css';
 
-export default function CreatePostModal({ open, handleClose }: { open: boolean, handleClose: any }) {
-
+export default function CreatePostModal({ open, handleClose }: { open: boolean, handleClose: () => void }) {
     const [editorHtml, setEditorHtml] = useState('');
     const [title, setTitle] = useState('');
     const [loadEditor, setLoadEditor] = useState(false);
@@ -45,12 +44,10 @@ export default function CreatePostModal({ open, handleClose }: { open: boolean, 
                 contents: editorHtml,
                 category: categories[selectedCategory]
             })
-
-        })
+        });
         setDisableButton(false);
         handleClose();
-        window.location.reload();
-    }
+    };
 
     useEffect(() => {
         if (open) {
@@ -61,12 +58,7 @@ export default function CreatePostModal({ open, handleClose }: { open: boolean, 
     }, [open]);
 
     return (
-
-        <Modal
-            open={open}
-            onClose={handleClose}  
-            sx={{ zIndex: 9999 }}
-        >
+        <Modal open={open} onClose={handleClose} sx={{ zIndex: 9999 }}>
             <div className="h-screen w-full flex justify-center items-center">
                 <Box sx={{
                     width: 0.6,
@@ -78,16 +70,10 @@ export default function CreatePostModal({ open, handleClose }: { open: boolean, 
                     backgroundColor: "white",
                     borderRadius: 3
                 }}>
-
-                   
-
                 <div className="w-3/5 h-1/8 p-2">
-                    <TextField fullWidth label="Title" onChange={(e: any) => setTitle(e.target.value)} />
+                    <TextField fullWidth label="Title" value={title} onChange={(e: any) => setTitle(e.target.value)} />
                 </div>
-
                 <div className="h-3/4 w-3/4 flex flex-col items-center items-start overflow-auto">
-
-
                     {loadEditor && (
                         <ReactQuill
                             theme="snow"
@@ -98,35 +84,32 @@ export default function CreatePostModal({ open, handleClose }: { open: boolean, 
                         />
                     )}
                 </div>
-
-                <div className="h-1/8 mt-2 flex flex-col justify-center items-center"> 
-                <Box sx={{ width: '100%', marginBottom: 2 }}>
-                            <FormControl fullWidth sx={{ }}>
-                                <InputLabel id="category-select-label">Category</InputLabel>
-                                <Select
-                                    labelId="category-select-label"
-                                    id="category-select"
-                                    value={selectedCategory}
-                                    label="Category"
-                                    onChange={(e) => setSelectedCategory(e.target.value)}
-                                    MenuProps={{ style: { zIndex: 999999 } }}
-                                >
-
+                <div className="h-1/8 mt-2 flex flex-col justify-center items-center">
+                    <Box sx={{ width: '100%', marginBottom: 2 }}>
+                        <FormControl fullWidth>
+                            <InputLabel id="category-select-label">Category</InputLabel>
+                            <Select
+                                labelId="category-select-label"
+                                id="category-select"
+                                value={selectedCategory}
+                                label="Category"
+                                onChange={(e) => setSelectedCategory(e.target.value)}
+                                MenuProps={{ style: { zIndex: 999999 } }}
+                            >
                                 {Object.keys(categories).map((category, index) => (
                                     category !== 'All' &&
-                                        <MenuItem key={index} value={category}>{category}</MenuItem>
-                                ))} 
+                                    <MenuItem key={index} value={category}>{category}</MenuItem>
+                                ))}
                             </Select>
                         </FormControl>
                     </Box>
                     <Box className="flex flex-row gap-x-2">
-                        <Button disabled={disableButton} variant="contained" onClick={handleSubmit}>Upload</Button>
+                        <Button disabled={disableButton || !title || !editorHtml} variant="contained" onClick={handleSubmit}>Upload</Button>
                         {disableButton && <CircularProgress />}
                     </Box>
                 </div>
             </Box>
         </div>
-
-        </Modal >
+        </Modal>
     );
 }
