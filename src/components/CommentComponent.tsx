@@ -13,62 +13,72 @@ import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import EditCommentModal from '@/components/EditCommentModal';
 
-function convertToReadableDate(timestamp: string) {
-  const isoTimestamp = timestamp;
-  const date = new Date(isoTimestamp);
-
-  const options = { year: 'numeric', month: 'long', day: 'numeric' };
-  //@ts-ignore
-  const formattedDate = date.toLocaleDateString('en-US', options);
-  return formattedDate;
+interface CommentProps {
+  comment_id: number;
+  commenter_id: number;
+  content: string;
+  timestamp: string;
+  refresh: () => void;
 }
 
-export default function CommentComponent({comment_id, commenter_id, content, timestamp, refresh}: {comment_id: number, commenter_id: number, content: string, timestamp: string, refresh: any}) {
-    const [name, setName] = useState('');
-    const [picture, setPicture] = useState('');
-    const { userId } = getUserDetails();
-    const [openEditCommentModal, setOpenEditCommentModal] = useState(false);
+function convertToReadableDate(timestamp: string) {
+  const date = new Date(timestamp);
+  return date.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  });
+}
 
-    const deleteComment = async () => {
-        await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/comment/deleteComment`, {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                commentId: comment_id
-            })
-        });
-        refresh();
+export default function CommentComponent({
+  comment_id,
+  commenter_id,
+  content,
+  timestamp,
+  refresh
+}: CommentProps) {
+  const [name, setName] = useState('');
+  const [picture, setPicture] = useState('');
+  const { userId } = getUserDetails();
+  const [openEditCommentModal, setOpenEditCommentModal] = useState(false);
+
+  const deleteComment = async () => {
+    await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/comment/deleteComment`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        commentId: comment_id
+      })
+    });
+    refresh();
+  };
+
+  const getUserData = async () => {
+    const storedName = sessionStorage.getItem(commenter_id.toString());
+    if (storedName) {
+      setName(storedName);
+      return;
     }
 
-    const getUserData = async () => {
+    const data = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/user/getUserInfo`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ user_id: commenter_id })
+    });
+    const userData = await data.json();
+    sessionStorage.setItem(commenter_id.toString(), userData.name);
+    setName(userData.name);
+    setPicture(userData.picture);
+  };
 
-        const data = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/user/getUserInfo`, 
-          {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ user_id: commenter_id })
-          }
-        )
-        
-        const userData = await data.json();
+  useEffect(() => {
+    getUserData();
+  }, [commenter_id]);
 
-        sessionStorage.setItem(commenter_id.toString(), userData.name);
-
-        setName(userData.name);
-        setPicture(userData.picture);
-   
-
-
-      }
-      
-
-      useEffect(() => {
-        getUserData();
-      })
   return (
     <>
       <EditCommentModal open={openEditCommentModal} handleClose={() => setOpenEditCommentModal(false)} commentID={comment_id} content={content} refresh={refresh} />
@@ -105,7 +115,7 @@ export default function CommentComponent({comment_id, commenter_id, content, tim
                 </IconButton>
                 <IconButton
                   aria-label="edit"
-                  onClick={(e: any) => {
+                  onClick={() => {
                     setOpenEditCommentModal(true);
                   }}
                   sx={{
