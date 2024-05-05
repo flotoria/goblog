@@ -14,12 +14,13 @@ export default async function handler(
   try {
     if (req.method === "POST") {
           const { user_id } = req.body;
-          const result = await sql`SELECT name, email, gender, profile_picture FROM users WHERE id = ${user_id};`
+          const result = await sql`SELECT name, email, gender, phone_number, profile_picture FROM users WHERE id = ${user_id};`
           const name = result.rows[0].name;
           const email = result.rows[0].email;
           const gender = result.rows[0].gender;
+          const phone_number = result.rows[0].phone_number;
           const picture = result.rows[0].profile_picture;
-          return res.status(200).json({ name, email, gender, picture });   
+          return res.status(200).json({ name, email, gender, phone_number, picture });   
     }
     else {
       return res.status(405).json({ message: "Method not allowed." });

@@ -16,17 +16,34 @@ function getExtension(mimeType: string) {
       default:
         return '';
     }
-  }
+}
   
+
+function formatPhoneNumber(value: string): string {
+    if (!value) return value;
+
+    const phoneNumber = value.replace(/[^\d]/g, '');
+    const phoneNumberLength = phoneNumber.length;
+
+    if (phoneNumberLength < 4) return phoneNumber;
+
+    if (phoneNumberLength < 7) {
+        return `(${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(3)}`;
+    }
+
+    return `(${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(3, 6)}-${phoneNumber.slice(6, 10)}`;
+}
+
 
 export default function UserSettings() {
 
-    const { name, email, gender } = getUserDetails();
+    const { name, email, gender, phone_number } = getUserDetails();
 
     const [newName, setNewName] = useState(name);
     const [newEmail, setNewEmail] = useState(email);
     const [password, setPassword] = useState('');
     const [newGender, setNewGender] = useState(gender);
+    const [newPhoneNumber, setNewPhoneNumber] = useState(phone_number);
     const [openSnackbar, setOpenSnackbar] = useState(false);    
     
 
@@ -102,6 +119,19 @@ export default function UserSettings() {
         setOpenSnackbar(true);
     }
 
+    const onSubmitChangePhoneNumber = () => {
+        fetch('/api/user/changeUserPhoneNumber', {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                phone_number: newPhoneNumber
+            })
+        })
+        setOpenSnackbar(true);
+    }
+
     const onSubmitChangePassword = () => {
         fetch('/api/user/changeUserPass', {
             method: 'PATCH',
@@ -147,6 +177,14 @@ export default function UserSettings() {
                 </FormControl>
                 <Button variant="contained" onClick={onSubmitChangeGender}>Change Gender</Button>
 
+                <TextField
+                    value={newPhoneNumber}
+                    onChange={(e: any) => setNewPhoneNumber(formatPhoneNumber(e.target.value))}
+                    label="Phone Number"
+                    variant="outlined"
+                />
+                <Button variant="contained" onClick={onSubmitChangePhoneNumber}>Change Phone Number</Button>
+                
                 <TextField type="password" value={password} onChange={(e: any) => setPassword(e.target.value)} label="Password" variant="outlined" />
                 <Button variant="contained" onClick={onSubmitChangePassword}>Change Password</Button>
                 <Button
