@@ -31,7 +31,7 @@ export default function Header() {
     }
 
     const fetchPicture = async () => {
-        fetch('/api/user/getUserInfo', {
+        await fetch('/api/user/getUserInfo', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
