@@ -18,7 +18,7 @@ interface CommentProps {
   commenter_id: number;
   content: string;
   timestamp: string;
-  refresh: () => void;
+  refresh: () => any;
 }
 
 function convertToReadableDate(timestamp: string) {
