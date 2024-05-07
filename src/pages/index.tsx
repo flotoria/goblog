@@ -44,13 +44,14 @@ export default function Home() {
   return (
     <>
 
-      <div className="min-h-screen bg-black flex flex-row items-center">
+      <div className="min-h-screen bg-black flex flex-row items-center relative">
         <SparklesPreview />
+        <div className="absolute justify-center left-0 right-0 justify-center flex gap-2 mr-3 mt-6">
+          <Button onClick={() => router.push('/login')} variant="outlined" sx={{color: "white", borderColor: "white", '&:hover': {borderColor: 'white', }}}>Login</Button>
+          <Button onClick={() => router.push('/register')} variant="outlined" sx={{color: "white", borderColor: "white", '&:hover': {borderColor: 'white', }}}>Signup</Button>
+        </div>
       </div>
-      <div className="absolute flex flex-row h-screen top-0 left-0 right-0 justify-center items-center gap-x-2 mt-3">
-      <Button onClick={() => router.push('/login')} variant="outlined" sx={{color: "white", borderColor: "white", '&:hover': {borderColor: 'white', }}}>Login</Button>
-        <Button onClick={() => router.push('/register')} variant="outlined" sx={{color: "white", borderColor: "white", '&:hover': {borderColor: 'white', }}}>Signup</Button>
-      </div>
+    
 
 
 
