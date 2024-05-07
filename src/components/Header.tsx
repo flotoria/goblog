@@ -53,7 +53,7 @@ export default function Header() {
 
     useEffect(() => {
         fetchPicture();
-    }, [id]);
+    }, [id, userId]);
 
     return (
         <header className="bg-slate-100 text-white w-full flex flex-row h-12 drop-shadow-md sticky z-[9995]">

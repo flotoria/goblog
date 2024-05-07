@@ -56,23 +56,23 @@ export default function CommentComponent({
   };
 
   const getUserData = async () => {
-    const storedName = sessionStorage.getItem(commenter_id.toString());
-    if (storedName) {
-      setName(storedName);
-      return;
+    try {
+   
+      const data = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/user/getUserInfo`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ user_id: commenter_id })
+      });
+      const userData = await data.json();
+      sessionStorage.setItem(commenter_id.toString(), userData.name);
+      setName(userData.name);
+      console.log("test stuff ", userData.picture);
+      setPicture(userData.picture);
+    } catch (error) {
+      console.log("really",  error);
     }
-
-    const data = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/user/getUserInfo`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ user_id: commenter_id })
-    });
-    const userData = await data.json();
-    sessionStorage.setItem(commenter_id.toString(), userData.name);
-    setName(userData.name);
-    setPicture(userData.picture);
   };
 
   useEffect(() => {

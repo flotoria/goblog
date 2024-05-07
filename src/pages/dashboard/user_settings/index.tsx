@@ -1,6 +1,6 @@
 import DashboardLayout from "@/components/DashboardLayout";
 import { getUserDetails } from "@/hooks/userHooks";
-import { TextField, Button, Box, FormControl, InputLabel, Select, MenuItem, Snackbar } from "@mui/material";
+import { TextField, Button, Box, FormControl, InputLabel, Select, MenuItem, Snackbar, Avatar, Typography } from "@mui/material";
 import { useState, useEffect } from "react";
 import { SelectChangeEvent } from '@mui/material/Select';
 
@@ -45,6 +45,7 @@ export default function UserSettings() {
     const [newGender, setNewGender] = useState(gender);
     const [newPhoneNumber, setNewPhoneNumber] = useState(phone_number);
     const [openSnackbar, setOpenSnackbar] = useState(false);    
+    const [picture, setPicture] = useState('');
     
     useEffect(() => {
         setNewName(name);
@@ -165,6 +166,26 @@ export default function UserSettings() {
                 flexDirection: "column",
                 gap: 1
             }}>
+                <Box sx={{display: "flex", flexDirection: "row", mb: 1}}>
+                    
+                    <Avatar sx={{width: 60, height: 60, bgcolor: "lightblue" }} aria-label="recipe">
+                        {picture ? (<img src={picture} style={{width: '100%', height: '100%', objectFit: 'cover'}} />) : name && name.charAt(0)}
+                    </Avatar>
+                    
+     
+                <Box sx={{display: "flex", flexDirection: "column", justifyContent: "center"}}>
+                    <Typography sx={{ml: 1, fontWeight: "bold"}}>
+                        {name ? name : "Loading..."}
+                    </Typography>
+                    <Typography sx={{ml: 1}}>
+                        {email ?  email : "Loading..."}
+                    </Typography>
+                    <Typography sx={{ml: 1}}>
+                        {phone_number ?  phone_number : "Loading..."}
+                    </Typography>
+                </Box>
+                
+            </Box>
                 <TextField value={newName} onChange={(e: any) => setNewName(e.target.value)} label="Name" variant="outlined" />
                 <Button variant="contained" onClick={onSubmitChangeName}>Change Name</Button>
                 <TextField value={newEmail} onChange={(e: any) => setNewEmail(e.target.value)} label="Email" variant="outlined" />
