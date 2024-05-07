@@ -4,7 +4,7 @@ import {changeUserId, changeName, changeEmail, changeGender, changePhoneNumber, 
 import { RootState } from '@/state/store';
 import { useRouter } from 'next/router';
 
-export function setUserDetails() {
+export function setUserDetails(dependencies: any[] = []) {
 
     const [loading, setLoading] = useState(false);
     const router = useRouter();
@@ -31,7 +31,7 @@ export function setUserDetails() {
 
     useEffect(() => {
        fetchDataAndChangeState();
-     }, []);
+     }, dependencies);
 
     return { loading };
 }

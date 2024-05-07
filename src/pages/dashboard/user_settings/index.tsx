@@ -1,9 +1,9 @@
 import DashboardLayout from "@/components/DashboardLayout";
-import { getUserDetails } from "@/hooks/userHooks";
+import { getUserDetails, setUserDetails } from "@/hooks/userHooks";
 import { TextField, Button, Box, FormControl, InputLabel, Select, MenuItem, Snackbar, Avatar, Typography } from "@mui/material";
 import { useState, useEffect } from "react";
 import { SelectChangeEvent } from '@mui/material/Select';
-import { profile } from "console";
+
 
 // Function to get file extension from MIME type
 function getExtension(mimeType: string) {
@@ -36,15 +36,22 @@ function formatPhoneNumber(value: string): string {
 
 export default function UserSettings() {
 
-    const { name, email, gender, phone_number, profile_picture } = getUserDetails();
 
-    const [newName, setNewName] = useState(name);
-    const [newEmail, setNewEmail] = useState(email);
+
+    
+
+    const [newName, setNewName] = useState('');
+    const [newEmail, setNewEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [newGender, setNewGender] = useState(gender);
-    const [newPhoneNumber, setNewPhoneNumber] = useState(formatPhoneNumber(phone_number));
+    const [newGender, setNewGender] = useState('');
+    const [newPhoneNumber, setNewPhoneNumber] = useState('');
     const [openSnackbar, setOpenSnackbar] = useState(false);    
     const [picture, setPicture] = useState('');
+    const [change, setChange] = useState(0);
+
+    setUserDetails([change]);
+
+    const { name, email, gender, phone_number, profile_picture } = getUserDetails();
     
     useEffect(() => {
         setNewName(name);
@@ -52,7 +59,7 @@ export default function UserSettings() {
         setNewGender(gender);
         setNewPhoneNumber(formatPhoneNumber(phone_number));
         setPicture(profile_picture);
-    }, [name, email, gender, phone_number, profile_picture]);
+    }, []);
 
     const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.files && event.target.files[0]) {
@@ -87,6 +94,9 @@ export default function UserSettings() {
 
           reader.readAsDataURL(file);
         }
+        setTimeout(() => {
+            setChange(change + 1);
+          }, 1000);
         setOpenSnackbar(true);
       };
 
@@ -100,6 +110,9 @@ export default function UserSettings() {
                 name: newName
             })
         })
+        setTimeout(() => {
+            setChange(change + 1);
+          }, 1000);
         setOpenSnackbar(true);
     }
 
@@ -113,6 +126,9 @@ export default function UserSettings() {
                 gender: newGender
             })
         })
+        setTimeout(() => {
+            setChange(change + 1);
+          }, 1000);
         setOpenSnackbar(true);
     }
 
@@ -139,6 +155,9 @@ export default function UserSettings() {
                 phone_number: newPhoneNumber
             })
         })
+        setTimeout(() => {
+            setChange(change + 1);
+          }, 1000);
         setOpenSnackbar(true);
     }
 
@@ -152,6 +171,9 @@ export default function UserSettings() {
                 password: password
             })
         })
+        setTimeout(() => {
+            setChange(change + 1);
+          }, 1000);
         setOpenSnackbar(true);
     }
 
