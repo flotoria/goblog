@@ -1,4 +1,4 @@
-import { TextField, Box, Button, FormControl, InputLabel, MenuItem, Select, Snackbar } from '@mui/material';
+import { TextField, Box, Button, FormControl, InputLabel, MenuItem, Select, Snackbar, Alert } from '@mui/material';
 import Image from 'next/image';
 import Link from 'next/link';
 import { SelectChangeEvent } from '@mui/material/Select';
@@ -172,11 +172,14 @@ export default function Register() {
         </div>
       </div>
       <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={3000}
-        onClose={handleCloseSnackbar}
-        message={snackbarMessage}
-      />
+      open={snackbarOpen}
+      autoHideDuration={3000}
+      onClose={handleCloseSnackbar}>
+  
+        <Alert onClose={handleCloseSnackbar} severity="error" sx={{ width: '100%' }}>
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </div>
   );
 }
