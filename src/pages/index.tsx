@@ -44,7 +44,6 @@ export default function Home() {
   return (
     <>
 
-
       <div className="min-h-screen bg-black flex flex-row items-center">
         <SparklesPreview />
       </div>

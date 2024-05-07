@@ -25,6 +25,7 @@ export default async function handler(
         if (!response.ok) {
             return res.status(401).json({ message: "Invalid token." });
         }
+        
 
         const result = await sql`SELECT * FROM posts WHERE id=${post_id as string};`
         return res.status(200).json(result.rows[0]);

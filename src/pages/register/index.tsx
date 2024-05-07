@@ -1,11 +1,11 @@
-import { TextField, Box, Button } from '@mui/material';
+import { TextField, Box, Button, Snackbar, Alert     } from '@mui/material';
 import Image from 'next/image';
 import Link from 'next/link'
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 
 
@@ -15,22 +15,31 @@ export default function Register() {
     const router = useRouter();
 
     const handleSubmit = async () => {
-        
-        const res = await fetch('/api/user/createUser', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                name,
-                gender,
-                email,
-                phone_number: phoneNumber,
-                password
-            })
-        });
+        try {
+            const res = await fetch('/api/user/createUser', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    name,
+                    gender,
+                    email,
+                    phone_number: phoneNumber,
+                    password
+                })
+            });
 
-        router.push('/login');
+            if (!res.ok) {
+                setError(true);
+                return;
+            }
+
+            router.push('/login');
+        }
+        catch (e) {
+            setError(true);
+        }
     }
 
     const [name, setName] = useState('');
@@ -38,9 +47,43 @@ export default function Register() {
     const [email, setEmail] = useState('');
     const [phoneNumber, setPhoneNumber] = useState('');
     const [password, setPassword] = useState('');
+    const [error, setError] = useState(false);
+
+    const tryToLoginUser = async () => {
+        try {
+            const res = await fetch('/api/user/validateAndGetUser', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                credentials: 'include'
+            });
+
+            if (res.ok) {
+                const data = await res.json();
+                router.push("/dashboard");
+            }
+        }
+        catch {
+            router.push("/login");
+        }
+
+    }
+
+    useEffect(() => {
+        tryToLoginUser();
+    }, []);
 
     return (
         <div className="w-full min-h-screen bg-slate-200 flex justify-center items-center">
+            <Snackbar
+                open={error}
+                autoHideDuration={2000}
+                onClose={() => setError(false)}>
+                <Alert onClose={() => setError(false)} severity="error" sx={{ width: '100%' }}>
+                    An error occurred or email already exists. Please try again.
+                </Alert>
+            </Snackbar>
             <div className="w-1/2 md:flex hidden justify-center items-center">
                 <div className="w-128 h-128 flex justify-center items-center">
                     <Image src="/logo.png" className="w-96 h-96 rounded-full drop-shadow-lg" alt="Logo" width={600} height={600} />
@@ -56,7 +99,7 @@ export default function Register() {
                         flexDirection: 'column',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        gap: 1.9
+                        gap: 1.6
                     }}>
 
                         <h1 className="text-3xl font-semibold mb-2">Register</h1>
@@ -116,6 +159,7 @@ export default function Register() {
                                 borderRadius: '15px',
                                 textTransform: 'none',
                             }}
+                            disabled={name === '' || phoneNumber === '' || email === '' || password === '' || gender === ''}
                             variant="contained">
                             Register
                         </Button>
