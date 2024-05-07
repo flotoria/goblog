@@ -1,7 +1,7 @@
 import DashboardLayout from "@/components/DashboardLayout";
 import { getUserDetails } from "@/hooks/userHooks";
 import { TextField, Button, Box, FormControl, InputLabel, Select, MenuItem, Snackbar } from "@mui/material";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { SelectChangeEvent } from '@mui/material/Select';
 
 // Function to get file extension from MIME type
@@ -46,8 +46,13 @@ export default function UserSettings() {
     const [newPhoneNumber, setNewPhoneNumber] = useState(phone_number);
     const [openSnackbar, setOpenSnackbar] = useState(false);    
     
+    useEffect(() => {
+        setNewName(name);
+        setNewEmail(email);
+        setNewGender(gender);
+        setNewPhoneNumber(phone_number);
+    }, [name, email, gender, phone_number]);
 
-    // Function to handle file change
     const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.files && event.target.files[0]) {
           const file = event.target.files[0];
