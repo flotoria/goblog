@@ -1,13 +1,9 @@
-import { setUserDetails, getUserDetails } from "@/hooks/userHooks";
-import { Box, FormControl, Select, InputLabel, MenuItem, CircularProgress } from "@mui/material";
-import { useState, useEffect } from "react";
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
-import Modal from '@mui/material/Modal';
-import TextField from '@mui/material/TextField';
+import { Box, FormControl, Select, InputLabel, MenuItem, CircularProgress, Typography, Modal, TextField, Button } from '@mui/material';
+import { useState, useEffect, useCallback } from 'react';
 import dynamic from 'next/dynamic';
-const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 import 'react-quill/dist/quill.snow.css';
+
+const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
 export default function CreatePostModal({ open, handleClose }: { open: boolean, handleClose: any }) {
 
@@ -17,6 +13,7 @@ export default function CreatePostModal({ open, handleClose }: { open: boolean, 
     const [selectedCategory, setSelectedCategory] = useState('All');
     const categories:{ [key: string]: number } = { 'All': 0, 'Tech': 1, 'Design': 2, 'Business': 3, 'Health': 4, 'Games': 5 };
     const [disableButton, setDisableButton] = useState(false);
+    const [loading, setLoading] = useState(false);
     
     const handleChange = (html: any) => {
         setEditorHtml(html);
@@ -33,24 +30,28 @@ export default function CreatePostModal({ open, handleClose }: { open: boolean, 
         ],
     };
 
-    const handleSubmit = async () => {
+    const handleSubmit = useCallback(async () => {
+        if (!title || !editorHtml) {
+          alert('Title and Content are required');
+          return;
+        }
         setDisableButton(true);
+        setLoading(true);
         await fetch('/api/post/createPost', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                title: title,
-                contents: editorHtml,
-                category: categories[selectedCategory]
-            })
-
-        })
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            title,
+            contents: editorHtml,
+            category: categories[selectedCategory],
+          }),
+        });
         setDisableButton(false);
+        setLoading(false);
         handleClose();
-        window.location.reload();
-    }
+    }, [title, editorHtml, selectedCategory, handleClose, categories]);
 
     useEffect(() => {
         if (open) {
@@ -101,27 +102,36 @@ export default function CreatePostModal({ open, handleClose }: { open: boolean, 
 
                 <div className="h-1/8 mt-2 flex flex-col justify-center items-center"> 
                 <Box sx={{ width: '100%', marginBottom: 2 }}>
-                            <FormControl fullWidth sx={{ }}>
-                                <InputLabel id="category-select-label">Category</InputLabel>
-                                <Select
-                                    labelId="category-select-label"
-                                    id="category-select"    
-                                    value={selectedCategory}
-                                    label="Category"
-                                    onChange={(e) => setSelectedCategory(e.target.value)}
-                                    MenuProps={{ style: { zIndex: 999999 } }}
-                                >
-
-                                {Object.keys(categories).map((category, index) => (
-                                    category !== 'All' &&
-                                        <MenuItem key={index} value={category}>{category}</MenuItem>
-                                ))} 
-                            </Select>
-                        </FormControl>
-                    </Box>
-                    <Box className="flex flex-row gap-x-2">
-                        <Button disabled={disableButton} variant="contained" onClick={handleSubmit}>Upload</Button>
-                        {disableButton && <CircularProgress />}
+                    <FormControl fullWidth>
+                        <InputLabel id='category-select-label'>Category</InputLabel>
+                        <Select
+                        labelId='category-select-label'
+                        id='category-select'
+                        value={selectedCategory}
+                        label='Category'
+                        onChange={(e) => setSelectedCategory(e.target.value)}
+                        MenuProps={{ style: { zIndex: 999999 } }}
+                        >
+                        {Object.keys(categories).map(
+                            (category, index) =>
+                            category !== 'All' && (
+                                <MenuItem key={index} value={category}>
+                                {category}
+                                </MenuItem>
+                            )
+                        )}
+                        </Select>
+                    </FormControl>
+                </Box>
+                    <Box className='flex flex-row gap-x-2'>
+                        <Button
+                        disabled={disableButton || !title || !editorHtml}
+                        variant='contained'
+                        onClick={handleSubmit}
+                        >
+                        Upload
+                        </Button>
+                        {loading && <CircularProgress />}
                     </Box>
                 </div>
             </Box>
