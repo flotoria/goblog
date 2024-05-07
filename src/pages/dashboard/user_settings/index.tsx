@@ -18,7 +18,6 @@ function getExtension(mimeType: string) {
     }
 }
   
-
 function formatPhoneNumber(value: string): string {
     if (!value) return value;
 
@@ -33,7 +32,6 @@ function formatPhoneNumber(value: string): string {
 
     return `(${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(3, 6)}-${phoneNumber.slice(6, 10)}`;
 }
-
 
 export default function UserSettings() {
 
