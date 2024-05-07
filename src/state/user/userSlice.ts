@@ -38,5 +38,5 @@ const userSlice = createSlice({
     }
 });
 
-export const { changeUserId, changeName, changeGender, changeEmail, changePhoneNumber} = userSlice.actions;
+export const { changeUserId, changeName, changeGender, changeEmail, changePhoneNumber } = userSlice.actions;
 export default userSlice.reducer;

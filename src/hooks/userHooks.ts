@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import {changeUserId, changeName, changeEmail, changeGender} from '@/state/user/userSlice';
+import {changeUserId, changeName, changeEmail, changeGender, changePhoneNumber} from '@/state/user/userSlice';
 import { RootState } from '@/state/store';
 import { useRouter } from 'next/router';
 
@@ -23,6 +23,7 @@ export function setUserDetails() {
         dispatch(changeName(data.name));
         dispatch(changeEmail(data.email));
         dispatch(changeGender(data.gender));
+        dispatch(changePhoneNumber(data.phone_number));
         setLoading(false);
     }
 

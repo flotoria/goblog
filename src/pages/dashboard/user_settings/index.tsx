@@ -47,6 +47,7 @@ export default function UserSettings() {
     const [openSnackbar, setOpenSnackbar] = useState(false);    
     
 
+    // Function to handle file change
     const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.files && event.target.files[0]) {
           const file = event.target.files[0];
