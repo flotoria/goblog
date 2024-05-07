@@ -71,7 +71,7 @@ export default function Register() {
         </div>
       </div>
       <div className='w-1/2 h-dvh flex items-center'>
-        <div className='w-128 h-128 rounded-3xl bg-slate-100 drop-shadow-md overflow-hidden'>
+        <div className='w-128 h-150 rounded-3xl bg-slate-100 drop-shadow-md overflow-hidden'>
           <Box
             sx={{
               width: 1,
@@ -164,6 +164,7 @@ export default function Register() {
                 textTransform: 'none',
               }}
               variant='contained'
+              disabled={!name || !gender || !phoneNumber || !email || !password || !confirmPassword }
             >
               Register
             </Button>

@@ -3,6 +3,7 @@ import { getUserDetails } from "@/hooks/userHooks";
 import { TextField, Button, Box, FormControl, InputLabel, Select, MenuItem, Snackbar, Avatar, Typography } from "@mui/material";
 import { useState, useEffect } from "react";
 import { SelectChangeEvent } from '@mui/material/Select';
+import { profile } from "console";
 
 // Function to get file extension from MIME type
 function getExtension(mimeType: string) {
@@ -35,13 +36,13 @@ function formatPhoneNumber(value: string): string {
 
 export default function UserSettings() {
 
-    const { name, email, gender, phone_number } = getUserDetails();
+    const { name, email, gender, phone_number, profile_picture } = getUserDetails();
 
     const [newName, setNewName] = useState(name);
     const [newEmail, setNewEmail] = useState(email);
     const [password, setPassword] = useState('');
     const [newGender, setNewGender] = useState(gender);
-    const [newPhoneNumber, setNewPhoneNumber] = useState(phone_number);
+    const [newPhoneNumber, setNewPhoneNumber] = useState(formatPhoneNumber(phone_number));
     const [openSnackbar, setOpenSnackbar] = useState(false);    
     const [picture, setPicture] = useState('');
     
@@ -49,8 +50,9 @@ export default function UserSettings() {
         setNewName(name);
         setNewEmail(email);
         setNewGender(gender);
-        setNewPhoneNumber(phone_number);
-    }, [name, email, gender, phone_number]);
+        setNewPhoneNumber(formatPhoneNumber(phone_number));
+        setPicture(profile_picture);
+    }, [name, email, gender, phone_number, profile_picture]);
 
     const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.files && event.target.files[0]) {
@@ -78,8 +80,11 @@ export default function UserSettings() {
                     type: getExtension(fileType)
                 })
             }) 
+
+            setPicture(base64String as string);
           };
       
+
           reader.readAsDataURL(file);
         }
         setOpenSnackbar(true);
@@ -179,7 +184,7 @@ export default function UserSettings() {
                         {email ?  email : "Loading..."}
                     </Typography>
                     <Typography sx={{ml: 1}}>
-                        {phone_number ?  phone_number : "Loading..."}
+                        {phone_number ?  formatPhoneNumber(phone_number) : "Loading..."}
                     </Typography>
                 </Box>
                 

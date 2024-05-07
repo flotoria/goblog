@@ -6,6 +6,7 @@ interface UserState {
     gender: string;
     email: string;
     phone_number: string;
+    profile_picture: string;
 }
 
 const initialState: UserState = { 
@@ -13,7 +14,8 @@ const initialState: UserState = {
     name: "",
     gender: "",
     email: "",
-    phone_number: ""
+    phone_number: "",
+    profile_picture: ""
 };
 
 const userSlice = createSlice({
@@ -34,9 +36,12 @@ const userSlice = createSlice({
         },
         changePhoneNumber: (state, action: PayloadAction<string>) => {
             state.phone_number = action.payload;
-        }
+        },
+        changeProfilePicture: (state, action: PayloadAction<string>) => {
+            state.profile_picture = action.payload;
+        },
     }
 });
 
-export const { changeUserId, changeName, changeGender, changeEmail, changePhoneNumber } = userSlice.actions;
+export const { changeUserId, changeName, changeGender, changeEmail, changePhoneNumber, changeProfilePicture } = userSlice.actions;
 export default userSlice.reducer;
