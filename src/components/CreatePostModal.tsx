@@ -51,6 +51,7 @@ export default function CreatePostModal({ open, handleClose }: { open: boolean, 
         setDisableButton(false);
         setLoading(false);
         handleClose();
+        window.location.reload();
     }, [title, editorHtml, selectedCategory, handleClose, categories]);
 
     useEffect(() => {
