@@ -142,6 +142,9 @@ export default function UserSettings() {
                 email: newEmail
             })
         })
+        setTimeout(() => {
+            setChange(change + 1);
+          }, 1000);
         setOpenSnackbar(true);
     }
 
